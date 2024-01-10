@@ -3,7 +3,7 @@ This repository showcases a dynamic journey through projects that fuse technolog
 
 # Sergio Arnold's Data Science & Engineering Portfolio 🚀
 
-Explore a world of data-driven stories, from crafting efficient ETL pipelines to predicting business outcomes. This repository showcases a dynamic journey through projects that fuse technology, creativity, and a passion for solving complex problems. From [Housing Market PF](/Housing_Market_PF) to [DSH-PI01](/DSH-PI01), each project unveils a unique blend of skills and innovation.
+Explore a world of data-driven stories, from crafting efficient ETL pipelines to predicting business outcomes. This repository showcases a dynamic journey through projects that fuse technology, creativity, and a passion for solving complex problems. Each project unveils a unique blend of skills and innovation.
 
 ## Projects Highlights
 - 🏡 **[Housing Market PF]([/Housing_Market_PF](https://github.com/JavieraArrieta/Housing_Market_PF)):** Dive into the realm of AWS-powered ETL systems, big data, and collaborative agile methodologies.

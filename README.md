@@ -6,7 +6,7 @@ This repository showcases a dynamic journey through projects that fuse technolog
 Explore a world of data-driven stories, from crafting efficient ETL pipelines to predicting business outcomes. This repository showcases a dynamic journey through projects that fuse technology, creativity, and a passion for solving complex problems. Each project unveils a unique blend of skills and innovation.
 
 ## Projects Highlights
-- 🏡 **[Housing Market PF]([/Housing_Market_PF](https://github.com/JavieraArrieta/Housing_Market_PF)):** Dive into the realm of AWS-powered ETL systems, big data, and collaborative agile methodologies.
+- 🏡 **[Housing Market PF](https://github.com/JavieraArrieta/Housing_Market_PF):** Dive into the realm of AWS-powered ETL systems, big data, and collaborative agile methodologies.
 - 📊 **[DSH-PI01](/DSH-PI01):** Lead the ETL process, from diverse data sources to a unified dataset, leveraging Python, SQLite, and Pandas.
 - 📈 **Predictive Analytics for Business:** Master predictive analytics through Udacity's Nanodegree, covering catalog demand prediction, risk assessment, and A/B testing.
 - 🚚 **Delivery Prediction:** Independently drive a project predicting timely deliveries, employing advanced data analysis tools.

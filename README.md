@@ -13,9 +13,9 @@ Explore a world of data-driven stories, from crafting efficient ETL pipelines to
 
 ## Skills Showcase
 - **Languages:** Python, R
-- **Databases:** SQL
+- **Databases:** SQL, NoSQL
 - **Big Data:** Apache Spark
-- **Tools:** Docker
+- **Tools:** Docker, Tableau, Alteryx
 - **Machine Learning:** Model development and implementation
 - **Statistics:** Proficient in data analysis
 - **Cloud Computing:** AWS (Amazon Web Services)

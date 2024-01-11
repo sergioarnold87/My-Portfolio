@@ -1,9 +1,7 @@
 # Nanodegree Project - Predictive Analytics for Business
 
 ## Project Description
-
-This repository showcases the projects completed as part of the Udacity Nanodegree [Predictive Analytics for Business](https://www.udacity.com/course/predictive-analytics-for-business-nanodegree--nd008t). Below are the projects covered in each section of the program:
-
+This repository highlights the projects completed as part of the [Udacity Nanodegree in Predictive Analytics for Business](https://www.udacity.com/course/predictive-analytics-for-business-nanodegree--nd008t), with a special emphasis on the use of Tableau and Alteryx. Below are the projects covered in each section of the program:
 ## Part 1: Problem Solving with Advanced Analytics
 
 In this section, a structured framework for problem-solving using advanced analytics was learned. Analytical methodologies, including Linear Regression and Multiple Linear Regression, were explored.

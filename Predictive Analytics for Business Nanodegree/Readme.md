@@ -39,3 +39,5 @@ Segmentation and clustering are effective methods for finding patterns in data. 
 **Project: Combine Predictive Techniques**
 
 This repository is a sample of the projects completed as part of the Udacity "Predictive Analytics for Business" Nanodegree.
+
+![Certificado](https://drive.google.com/file/d/1zQTKyD4gQKdpGvIl_wkbLSHhLvWPrX6O/view?usp=drive_link)

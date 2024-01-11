@@ -23,8 +23,8 @@ Explore a world of data-driven stories, from crafting efficient ETL pipelines to
 ## Education
 - 🎓 [**Bachelor's in Artificial Intelligence and Robotics:**] Ongoing at Universidad Americana, Paraguay.
 - 🚀 [**Data Science Bootcamp:**](https://certificates.soyhenry.com/cert?id=23a44d01-8b32-4699-9431-8c5fd030c2a2) Successfully completed at Soy Henry.
-- 🏆 [**Nanodegree in Predictive Analytics for Business:**](https://www.udacity.com/course/predictive-analytics-for-business-nanodegree--nd008) Graduated from Udacity.
-- 🌐 [**Platzi English Academy:**](https://platzi.com/english/](https://platzi.com/p/anol198753/ruta/13-idioma-ingles/diploma/detalle/) Completed for advanced English proficiency.
+- 🏆 [**Nanodegree in Predictive Analytics for Business:**](https://graduation.udacity.com/confirm/AMSGCYCN) Graduated from Udacity.
+- 🌐 [**Platzi English Academy:**](https://platzi.com/p/anol198753/ruta/13-idioma-ingles/diploma/detalle/) Completed for advanced English proficiency.
 
 ## Soft Skills
 - Clear mindset and focus

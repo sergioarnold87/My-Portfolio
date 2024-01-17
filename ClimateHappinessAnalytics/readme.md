@@ -53,7 +53,4 @@ Instructions for setting up the project, dependencies, and usage are provided in
 
 Limitations include non-standardized Twitter user locations and basic error handling in scripts. Manual setup of AWS tools is required.
 
-### License
-
-This project is licensed under the [MIT License](LICENSE).
 

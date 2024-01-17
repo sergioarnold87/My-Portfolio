@@ -22,6 +22,29 @@ Strategies for handling scenarios like a 100x increase in data, running the data
 
 Prerequisites include accounts for Twitter developer, Kaggle, and AWS, along with access to Kinesis Firehose and AWS Comprehend. A running AWS Redshift cluster, Airflow, and a Unix-like environment are required.
 
+### Technology Stack
+
+- **Programming Languages:**
+  - Python
+  - SQL
+
+- **Data Processing and Storage:**
+  - AWS Kinesis
+  - AWS S3
+  - AWS Redshift
+
+- **Data Analysis and Visualization:**
+  - pandas
+  - Matplotlib
+  - seaborn
+
+- **Workflow Orchestration:**
+  - Apache Airflow
+
+- **API Integration:**
+  - tweepy (Twitter API)
+  - boto3 (AWS SDK for Python)
+
 ### Usage
 
 Instructions for setting up the project, dependencies, and usage are provided in the README. They cover setting up connections, creating Python environments, obtaining datasets, running scripts, and triggering Airflow DAGs.

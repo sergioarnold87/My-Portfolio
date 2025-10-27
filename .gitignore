@@ -1,0 +1,148 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# pyenv
+.python-version
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Data files (large datasets)
+*.csv
+*.parquet
+*.json
+*.xlsx
+*.xls
+data/raw/
+data/processed/
+datasets/
+*.db
+*.sqlite
+*.sqlite3
+
+# Model files
+*.h5
+*.pkl
+*.joblib
+*.model
+*.pt
+*.pth
+models/
+checkpoints/
+
+# Logs
+*.log
+logs/
+*.out
+
+# AWS
+.aws/
+credentials
+
+# Airflow
+airflow.cfg
+airflow.db
+airflow-webserver.pid
+dags/__pycache__/
+logs/
+plugins/__pycache__/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.cache
+.cache/
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Documentation
+docs/_build/
+site/
+
+# Compiled
+*.pyc
+*.pyo
+*.pyd
+
+# Databases
+*.sql
+*.db-journal
+
+# ChromaDB
+chroma/
+chroma_db/
+.chroma/
+
+# Node (for any JS tooling)
+node_modules/
+package-lock.json
+
+# Terraform (if used)
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Misc
+.vscode-server/
+*.pid

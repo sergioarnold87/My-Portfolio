@@ -2,7 +2,12 @@ import os
 import glob
 import psycopg2
 import pandas as pd
+import logging
 from sql_queries import *
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def process_song_file(cur, filepath):
@@ -27,8 +32,8 @@ def process_song_file(cur, filepath):
         artist_data = [values['artist_id'], 
                         values['artist_name'], 
                         values['artist_location'], 
-                        float(values['artist_longitude']), 
-                        float(values['artist_latitude'])]
+                        float(values['artist_latitude']), 
+                        float(values['artist_longitude'])]
 
         cur.execute(artist_table_insert, artist_data)
 
@@ -128,17 +133,39 @@ def process_data(cur, conn, filepath, func):
 
 def main():
     """
-    Function used to extract, transform all data from song and user activity logs and load it into a PostgreSQL DB
-    Usage: 
+    Main ETL pipeline function.
+    Extracts, transforms, and loads data from song and user activity logs into PostgreSQL.
+    Uses environment variables for database credentials.
+    
+    Usage:
         python etl.py
     """
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=postgres password=admin")
-    cur = conn.cursor()
-
-    process_data(cur, conn, filepath='data/song_data', func=process_song_file)
-    process_data(cur, conn, filepath='data/log_data', func=process_log_file)
-
-    conn.close()
+    # Get database credentials from environment variables with defaults
+    db_host = os.getenv('DB_HOST', '127.0.0.1')
+    db_name = os.getenv('DB_NAME', 'sparkifydb')
+    db_user = os.getenv('DB_USER', 'postgres')
+    db_password = os.getenv('DB_PASSWORD', 'admin')
+    
+    try:
+        logger.info("Starting ETL pipeline...")
+        conn = psycopg2.connect(f"host={db_host} dbname={db_name} user={db_user} password={db_password}")
+        cur = conn.cursor()
+        
+        logger.info("Processing song data...")
+        process_data(cur, conn, filepath='data/song_data', func=process_song_file)
+        
+        logger.info("Processing log data...")
+        process_data(cur, conn, filepath='data/log_data', func=process_log_file)
+        
+        logger.info("ETL pipeline completed successfully!")
+        conn.close()
+        
+    except psycopg2.Error as e:
+        logger.error(f"Database error: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"ETL pipeline error: {e}")
+        raise
 
 
 if __name__ == "__main__":

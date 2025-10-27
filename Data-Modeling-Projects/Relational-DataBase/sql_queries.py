@@ -51,7 +51,7 @@ artist_table_create = ("""
         artist_id text PRIMARY KEY,
         name text NOT NULL, 
         location text, 
-        lattitude float, 
+        latitude float, 
         longitude float
      )
 """)
@@ -93,7 +93,7 @@ song_table_insert = ("""
 
 artist_table_insert = ("""
     INSERT INTO artists
-    (artist_id, name, location, lattitude, longitude)
+    (artist_id, name, location, latitude, longitude)
     VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (artist_id) DO NOTHING;
 """)
@@ -116,7 +116,21 @@ song_select = ("""
     AND songs.duration = %s
 """)
 
+# CREATE INDEXES FOR PERFORMANCE
+
+user_level_idx = "CREATE INDEX IF NOT EXISTS idx_users_level ON users(level);"
+song_artist_idx = "CREATE INDEX IF NOT EXISTS idx_songs_artist ON songs(artist_id);"
+artist_name_idx = "CREATE INDEX IF NOT EXISTS idx_artists_name ON artists(name);"
+time_year_idx = "CREATE INDEX IF NOT EXISTS idx_time_year ON time(year);"
+time_month_idx = "CREATE INDEX IF NOT EXISTS idx_time_month ON time(month);"
+songplay_user_idx = "CREATE INDEX IF NOT EXISTS idx_songplays_user ON songplays(user_id);"
+songplay_song_idx = "CREATE INDEX IF NOT EXISTS idx_songplays_song ON songplays(song_id);"
+songplay_artist_idx = "CREATE INDEX IF NOT EXISTS idx_songplays_artist ON songplays(artist_id);"
+songplay_time_idx = "CREATE INDEX IF NOT EXISTS idx_songplays_time ON songplays(start_time);"
+
 # QUERY LISTS
 
 create_table_queries = [user_table_create, artist_table_create, song_table_create, time_table_create, songplay_table_create]
 drop_table_queries = [songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
+create_index_queries = [user_level_idx, song_artist_idx, artist_name_idx, time_year_idx, time_month_idx, 
+                        songplay_user_idx, songplay_song_idx, songplay_artist_idx, songplay_time_idx]

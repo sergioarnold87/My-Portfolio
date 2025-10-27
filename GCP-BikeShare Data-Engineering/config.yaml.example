@@ -1,0 +1,22 @@
+# GCP Configuration Template
+# Copy this file to config.yaml and fill in your values
+
+project:
+  id: "your-gcp-project-id"
+  location: "US"
+
+bigquery:
+  datasets:
+    raw: "raw_bikesharing"
+    dwh: "dwh_bikesharing"
+    dm: "dm_bikesharing"
+
+storage:
+  bucket_name: "your-project-id-data-bucket"
+  paths:
+    regions: "from-git/chapter-3/dataset/regions/"
+    stations: "from-git/chapter-3/dataset/stations/"
+    trips: "from-git/chapter-3/dataset/trips/"
+
+service_account:
+  key_path: "path/to/your-service-account-key.json"

@@ -1,0 +1,1079 @@
+ENGINEERING ECONOMY IN UPSTREAM OIL & GAS
+by Duan & Onuoha
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: FUNDAMENTALS OF PETROLEUM ECONOMICS
+
+Introduction to Upstream Oil & Gas
+
+The upstream sector encompasses exploration, appraisal, development, and production of oil and natural gas reserves. It represents the most capital-intensive and risky segment of the oil and gas value chain, requiring sophisticated economic analysis for decision-making.
+
+Value Chain Components:
+
+Exploration:
+- Seismic surveys (2D, 3D, 4D)
+- Geological studies
+- Wildcat drilling
+- High risk, high reward
+- Success rates: 10-40%
+
+Appraisal:
+- Delineation wells
+- Reservoir characterization
+- Resource estimation
+- Production testing
+- Commerciality assessment
+
+Development:
+- Field development planning
+- Infrastructure design
+- Production facilities
+- Drilling programs
+- Longest lead time activity
+
+Production:
+- Well operations
+- Facility maintenance
+- Enhanced oil recovery
+- Decline curve management
+- Asset optimization
+
+Types of Hydrocarbon Resources:
+
+Conventional Resources:
+- Easy to extract
+- Good reservoir quality
+- Primary/secondary recovery
+- Lower breakeven costs
+- Mature technologies
+
+Unconventional Resources:
+- Shale oil and gas
+- Tight formations
+- Coal bed methane
+- Oil sands
+- Higher technical complexity
+- Hydraulic fracturing required
+
+Reserve Classifications (SPE-PRMS):
+
+Proved Reserves (1P):
+- 90% probability (P90)
+- Developed producing
+- Developed non-producing
+- Undeveloped
+- Bankable reserves
+
+Proved + Probable (2P):
+- 50% probability (P50)
+- Best estimate
+- Planning basis
+- 2P - 1P = Probable
+
+Proved + Probable + Possible (3P):
+- 10% probability (P10)
+- Upside scenario
+- Resource potential
+
+Contingent Resources:
+- Not yet commercial
+- Technical feasibility demonstrated
+- Awaiting economic conditions
+- Regulatory approval pending
+
+Prospective Resources:
+- Potential accumulations
+- Not yet discovered
+- Exploration targets
+- High risk
+
+Economic Framework:
+
+Time Value of Money:
+```
+Present Value (PV) = FV / (1 + r)^n
+
+where:
+FV = Future Value
+r = Discount rate
+n = Number of periods
+```
+
+Net Present Value (NPV):
+```
+NPV = Σ [Cash Flow_t / (1 + r)^t] - Initial Investment
+
+Decision rule:
+NPV > 0: Accept project
+NPV < 0: Reject project
+```
+
+Internal Rate of Return (IRR):
+```
+0 = Σ [Cash Flow_t / (1 + IRR)^t] - Initial Investment
+
+IRR = Discount rate where NPV = 0
+
+Decision rule:
+IRR > Required return: Accept
+IRR < Required return: Reject
+```
+
+Payback Period:
+```
+Time to recover initial investment
+
+Simple Payback: Ignores time value
+Discounted Payback: Accounts for time value
+
+Shorter payback = Lower risk
+```
+
+Key Cost Categories:
+
+Capital Expenditure (CAPEX):
+- Exploration costs
+- Development drilling
+- Facilities and infrastructure
+- Abandonment provisions
+- Large upfront investment
+
+Operating Expenditure (OPEX):
+- Production operations
+- Maintenance
+- Utilities
+- Personnel
+- Ongoing costs
+
+Fiscal Terms:
+- Royalties (% of production)
+- Production taxes
+- Corporate income tax
+- Ring-fencing provisions
+- Government take
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: PROJECT ECONOMICS EVALUATION
+
+Cash Flow Analysis
+
+Revenue Estimation:
+
+Production Profile:
+```
+Annual Production = Initial Rate * Decline Factor^t
+
+Exponential Decline:
+Q(t) = Q_i * e^(-D*t)
+
+Hyperbolic Decline:
+Q(t) = Q_i / (1 + b*D*t)^(1/b)
+
+where:
+Q_i = Initial production rate
+D = Decline rate
+b = Hyperbolic constant
+t = Time
+```
+
+Price Assumptions:
+- Flat price (conservative)
+- Escalated price (inflation-adjusted)
+- Forward curve (market-based)
+- Scenario analysis (high/low/mid)
+
+Revenue Calculation:
+```
+Revenue = Production * Price * Quality Adjustment
+
+Quality factors:
+- API gravity premium/discount
+- Sulfur content discount
+- Transportation to market
+- Netback pricing
+```
+
+Cost Estimation:
+
+CAPEX Breakdown:
+
+Exploration Phase:
+- Seismic acquisition: $10k-50k per km²
+- Exploration well: $5M-100M
+- Geological studies: $500k-2M
+- High risk capital
+
+Development Phase:
+- Development wells: $3M-50M each
+- Production facilities: $100M-1B+
+- Pipelines: $1M-3M per mile
+- Offshore platforms: $500M-5B+
+
+Typical CAPEX Ranges:
+- Onshore conventional: $10-20/bbl reserves
+- Offshore shallow water: $20-40/bbl
+- Deepwater: $40-100/bbl
+- Arctic/frontier: $80-150/bbl
+
+OPEX Components:
+```
+OPEX per barrel = Fixed costs/Production + Variable costs
+
+Fixed OPEX:
+- Personnel
+- Facilities maintenance
+- Insurance
+- Overhead
+
+Variable OPEX:
+- Energy/fuel
+- Chemicals
+- Water handling
+- Workover costs
+
+Typical OPEX ranges:
+- Onshore: $5-15/bbl
+- Offshore: $10-30/bbl
+- Enhanced recovery: $15-40/bbl
+```
+
+Economic Indicators:
+
+NPV Calculation Example:
+```
+Project: Onshore oil field
+Initial Investment: $200M
+Production: 10,000 bopd declining 15%/year
+Oil Price: $70/bbl
+OPEX: $10/bbl
+Royalty: 12.5%
+Tax rate: 30%
+Discount rate: 10%
+
+Year 1 Cash Flow:
+Revenue: 10,000 * 365 * $70 = $255.5M
+Royalty: $255.5M * 12.5% = $32M
+OPEX: 10,000 * 365 * $10 = $36.5M
+Taxable Income: $255.5M - $32M - $36.5M - Depreciation
+After-tax Cash Flow = ...
+```
+
+Discount Rate Selection:
+
+Weighted Average Cost of Capital (WACC):
+```
+WACC = (E/V * Re) + (D/V * Rd * (1-Tc))
+
+where:
+E = Market value of equity
+D = Market value of debt
+V = E + D
+Re = Cost of equity
+Rd = Cost of debt
+Tc = Corporate tax rate
+```
+
+Risk-Adjusted Rates:
+- Exploration: 20-30%
+- Appraisal: 15-20%
+- Development: 10-15%
+- Production: 8-12%
+- Enhanced recovery: 12-18%
+
+Country Risk Premium:
+```
+Discount Rate = Risk-free rate + Equity risk premium + Country risk
+
+Examples:
+US onshore: 10%
+North Sea: 12%
+West Africa: 18%
+Frontier areas: 25%+
+```
+
+Sensitivity Analysis:
+
+Key Variables:
+1. Oil/Gas Price (±20%)
+2. Production Volume (±15%)
+3. CAPEX (±30%)
+4. OPEX (±20%)
+5. Timing (±1-2 years)
+
+Tornado Diagram:
+```
+Variable          Impact on NPV
+Price:            ████████████████ -40% to +60%
+Volume:           ██████████ -25% to +35%
+CAPEX:            ███████ -20% to +15%
+OPEX:             ████ -10% to +10%
+Timing:           ███ -8% to +5%
+```
+
+Spider Diagram:
+Shows NPV change across range of each variable
+
+Scenario Analysis:
+
+Base Case:
+- Most likely assumptions
+- P50 reserves
+- Mid-price forecast
+- Expected costs
+
+Upside Case:
+- Optimistic assumptions
+- P10 reserves
+- High price scenario
+- Cost efficiencies
+
+Downside Case:
+- Conservative assumptions
+- P90 reserves
+- Low price scenario
+- Cost overruns
+
+Monte Carlo Simulation:
+```python
+# Pseudocode
+for i in range(10000):
+    price = random.normal(mean=70, std=15)
+    volume = random.triangular(low=P90, mode=P50, high=P10)
+    capex = random.uniform(low_estimate, high_estimate)
+    
+    npv = calculate_npv(price, volume, capex)
+    npv_distribution.append(npv)
+
+P10_NPV = percentile(npv_distribution, 10)
+P50_NPV = percentile(npv_distribution, 50)
+P90_NPV = percentile(npv_distribution, 90)
+```
+
+Breakeven Analysis:
+
+Breakeven Price:
+```
+Price where NPV = 0
+
+Iteratively solve:
+NPV(price) = 0
+
+Example results:
+Onshore conventional: $35/bbl
+Offshore shallow: $45/bbl
+Deepwater: $60/bbl
+Oil sands: $40/bbl (long-term)
+```
+
+Breakeven Production:
+```
+Minimum production to achieve target return
+
+Useful for:
+- Well pad economics
+- Infill drilling decisions
+- Enhanced recovery projects
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: FISCAL SYSTEMS AND CONTRACTS
+
+Types of Fiscal Regimes:
+
+Royalty/Tax System (R/T):
+
+Structure:
+- Host government owns resources
+- Company pays royalty (% of production)
+- Plus income tax on profits
+- Common in OECD countries
+
+Cash Flow Split:
+```
+Gross Revenue: 100%
+- Royalty: 12.5-20%
+- OPEX: Variable
+- Depreciation: Capital recovery
+= Taxable Income
+- Income Tax: 25-40%
+= Company Net Cash Flow: 40-60%
+```
+
+Examples:
+- United States (onshore)
+- Canada (Alberta)
+- Australia
+- United Kingdom
+
+Production Sharing Contract (PSC):
+
+Structure:
+- Government owns resources
+- Company recovers costs from "cost oil"
+- Remaining "profit oil" split per contract
+- No/low income tax
+
+Cash Flow Waterfall:
+```
+Gross Production: 100%
+- Royalty: 0-15%
+= Available for split
+- Cost Oil: 40-80% (cap)
+  → Company recovers CAPEX + OPEX
+= Profit Oil: Remaining
+  → Split per PSC (Company: 20-60%, Gov: 40-80%)
++ Cost Oil
+= Company Share
+```
+
+Examples:
+- Indonesia
+- Malaysia
+- Angola
+- Nigeria
+
+Service Contract:
+
+Structure:
+- Government owns resources and production
+- Company paid service fee
+- Fixed fee or % of production
+- Low risk, low reward
+
+Types:
+- Pure Service: Fixed $/bbl fee
+- Risk Service: Fee contingent on success
+- Enhanced: Performance bonuses
+
+Examples:
+- Mexico (pre-reform)
+- Iran
+- Kuwait
+- Saudi Arabia (historically)
+
+Concessionary System:
+
+Structure:
+- Company owns produced hydrocarbons
+- Government receives royalty + taxes
+- Full upstream control
+- Traditional system
+
+Characteristics:
+- Long-term licenses
+- Exploration commitments
+- Relinquishment obligations
+- Decommissioning responsibility
+
+Government Take Analysis:
+
+Calculation:
+```
+Government Take = (Gov Revenue) / (Total Project Revenue)
+
+Gov Revenue = Royalties + Taxes + Bonuses + Gov Profit Oil
+
+Total Revenue = Gross Revenue from production
+
+Typical ranges:
+US onshore: 40-50%
+North Sea: 60-70%
+Middle East PSC: 80-90%
+Service contracts: 85-95%
+```
+
+Progressivity:
+
+Regressive Systems:
+- Fixed royalty rate
+- Flat tax rate
+- Gov take decreases with price increase
+
+Progressive Systems:
+- Sliding scale royalties
+- Supplementary taxes
+- R-factor mechanisms
+- Gov take increases with profitability
+
+R-Factor:
+```
+R-Factor = Cumulative Revenue / Cumulative Costs
+
+Triggers higher government take at R > thresholds
+
+Example:
+R < 1.5: Company 40% profit oil
+R = 1.5-2.0: Company 30%
+R > 2.0: Company 20%
+```
+
+Fiscal Stability:
+
+Stabilization Clauses:
+- Freeze fiscal terms
+- Protect against adverse changes
+- Limited duration (10-20 years)
+- Renegotiation triggers
+
+Economic Equilibrium:
+- Price reopeners
+- Hardship clauses
+- Windfall taxes
+- Balance of risk/reward
+
+Contract Negotiation:
+
+Company Objectives:
+- Maximize NPV and IRR
+- Minimize government take
+- Ensure cost recovery
+- Operational control
+- Fiscal stability
+
+Government Objectives:
+- Maximize revenue
+- Technology transfer
+- Local content
+- Employment
+- Environmental protection
+
+Win-Win Negotiation:
+- Efficient risk allocation
+- Appropriate contract duration
+- Performance incentives
+- Dispute resolution mechanisms
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: DECISION ANALYSIS AND RISK
+
+Portfolio Management:
+
+Asset Portfolio Optimization:
+
+Objectives:
+- Maximize expected NPV
+- Minimize risk (volatility)
+- Balance short/long-term production
+- Geographic diversification
+- Resource type diversification
+
+Efficient Frontier:
+```
+Plot Risk vs Return
+Identify optimal portfolio mix
+
+Constraints:
+- Budget limitations
+- Technical capabilities
+- Geographic restrictions
+- Risk appetite
+```
+
+Capital Allocation:
+
+Prioritization Criteria:
+1. NPV per dollar invested (NPV/I)
+2. IRR relative to hurdle rate
+3. Strategic fit
+4. Risk-adjusted returns
+5. Timing flexibility
+
+Capital Rationing:
+```
+When capital < Total opportunities
+
+Rank projects by:
+PI = NPV / Initial Investment
+
+Fund projects until budget exhausted
+```
+
+Real Options Analysis:
+
+Option Types in O&G:
+
+Option to Defer:
+- Wait for better information
+- Price uncertainty resolution
+- Technology improvement
+- Value of waiting
+
+Option to Expand:
+- Pilot project → Full development
+- Phase development
+- Modular facilities
+- Growth options
+
+Option to Abandon:
+- Cease operations if uneconomic
+- Salvage value
+- Floor on losses
+- Insurance value
+
+Option to Switch:
+- Gas-to-oil production
+- Injection-to-production
+- Operating flexibility
+- Adapts to conditions
+
+Valuation Methods:
+
+Black-Scholes Adaptation:
+```
+Call Option Value = S*N(d1) - K*e^(-r*T)*N(d2)
+
+where:
+S = PV of expected cash flows
+K = Investment cost
+r = Risk-free rate
+T = Time to expiration
+σ = Volatility
+
+d1 = [ln(S/K) + (r + σ²/2)*T] / (σ*√T)
+d2 = d1 - σ*√T
+```
+
+Binomial Trees:
+- Discrete time steps
+- Up/down price movements
+- Work backward from decision points
+- Incorporates flexibility
+
+Decision Trees:
+
+Structure:
+- Decision nodes (squares)
+- Chance nodes (circles)
+- Terminal nodes (triangles)
+- Branches with probabilities
+
+Expected Monetary Value (EMV):
+```
+EMV = Σ (Probability * Outcome)
+
+Example:
+Explore: 
+  Success (30%): $500M
+  Failure (70%): -$50M
+EMV = 0.30*$500M + 0.70*(-$50M) = $115M
+
+Compare to alternative (e.g., farm-out)
+```
+
+Sequential Decisions:
+```
+Stage 1: Explore
+  → Success: Stage 2 Appraise
+    → Commercial: Stage 3 Develop
+    → Non-commercial: Abandon
+  → Failure: Abandon
+
+Roll back method:
+Start at end, calculate EMV backward
+```
+
+Risk Mitigation Strategies:
+
+Technical Risk:
+
+3D Seismic:
+- Reduce exploration risk
+- Improve success rate
+- Cost: $10k-50k per km²
+- Value: Improved decisions
+
+Pilot Holes:
+- Small-scale testing
+- Reservoir characterization
+- Reduced development risk
+- Lower cost than full wells
+
+Phased Development:
+- Staged investment
+- Learn before scaling
+- Flexibility to adapt
+- Reduced peak funding
+
+Commercial Risk:
+
+Hedging:
+```
+Financial instruments:
+- Futures contracts
+- Swaps
+- Options (collars)
+- Fixed-price contracts
+
+Example collar:
+Buy Put @ $60/bbl (floor)
+Sell Call @ $80/bbl (cap)
+Protected range: $60-80
+```
+
+Diversification:
+- Multiple assets
+- Geographic spread
+- Resource mix (oil/gas)
+- Uncorrelated risks
+
+Farm-Outs:
+- Reduce capital requirements
+- Share risk
+- Access expertise
+- Maintain exposure
+
+Political/Regulatory Risk:
+
+Contract Terms:
+- Fiscal stability clauses
+- Arbitration provisions
+- Force majeure protections
+- Change of control
+
+Insurance:
+- Political risk insurance
+- MIGA (World Bank)
+- Export credit agencies
+- Coverage: Expropriation, war, political violence
+
+Joint Ventures:
+- Risk sharing
+- Local partnerships
+- Political connections
+- Resource pooling
+
+Performance Metrics:
+
+Project-Level KPIs:
+
+Technical:
+- Reserves replacement ratio
+- Production efficiency
+- Decline rate management
+- Ultimate recovery factor
+
+Economic:
+- NPV and IRR
+- Unit development costs ($/boe)
+- Operating costs ($/boe)
+- Finding & development costs
+
+Operational:
+- HSE performance
+- Uptime/reliability
+- Drilling performance (days/well)
+- Cost per meter drilled
+
+Portfolio-Level KPIs:
+
+Growth Metrics:
+- Production CAGR
+- Reserve additions
+- Resource base growth
+- Exploration success rate
+
+Financial:
+- ROCE (Return on Capital Employed)
+- Free cash flow
+- Debt/equity ratio
+- Dividend sustainability
+
+Strategic:
+- Asset quality (% low-cost)
+- Portfolio balance
+- Carbon intensity
+- ESG score
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 5: ADVANCED TOPICS
+
+Enhanced Oil Recovery (EOR) Economics:
+
+EOR Methods:
+
+Thermal:
+- Steam injection
+- In-situ combustion
+- CAPEX: $20-40k per bbl/day
+- OPEX: $15-30/bbl
+- Incremental recovery: 10-20%
+
+Gas Injection:
+- CO2 flooding
+- Nitrogen injection
+- CAPEX: $15-30k per bbl/day
+- OPEX: $10-25/bbl
+- Incremental recovery: 8-15%
+
+Chemical:
+- Polymer flooding
+- Surfactant injection
+- CAPEX: $10-25k per bbl/day
+- OPEX: $12-28/bbl
+- Incremental recovery: 5-12%
+
+Economic Analysis:
+
+Incremental Economics:
+```
+Only incremental costs and revenues matter
+
+Incremental NPV = NPV(with EOR) - NPV(without EOR)
+
+Must justify:
+- Additional CAPEX
+- Higher OPEX
+- Extended field life
+- Vs incremental oil recovery
+```
+
+Timing Optimization:
+- Early EOR: Higher recovery potential
+- Late EOR: Mature infrastructure
+- Trade-off analysis required
+
+Case Study:
+```
+Field: Mature onshore
+Primary recovery: 10% (depleted)
+Secondary recovery: 25% (waterflooded)
+EOR target: +10% recovery
+
+Incremental reserves: 50 MMbbl
+CAPEX: $800M
+OPEX: $20/bbl
+Oil price: $70/bbl
+Discount rate: 12%
+
+Incremental NPV = ?
+IRR = ?
+Payback = ?
+```
+
+Subsea and Deepwater Economics:
+
+Cost Drivers:
+
+Water Depth Impact:
+```
+Shallow water (<400m): $20-40/bbl reserves
+Deepwater (400-1500m): $40-80/bbl
+Ultra-deepwater (>1500m): $60-100+/bbl
+
+Exponential cost increase with depth
+```
+
+Development Concepts:
+
+Standalone Platform:
+- Integrated topsides and hull
+- High CAPEX ($2-5B)
+- Suitable for large fields
+- Hub for future tie-backs
+
+Subsea Tie-Back:
+- Wells tied to host facility
+- Lower CAPEX ($500M-1.5B)
+- Suitable for smaller fields
+- Flowline length limited
+
+FPSO (Floating Production):
+- Ship-shaped production vessel
+- Flexible and movable
+- $1-3B depending on capacity
+- Suitable for remote locations
+
+Break-Even Analysis:
+```
+Minimum reserves for standalone: 300-500 MMboe
+Tie-back economic: 30-100 MMboe
+FPSO threshold: 100-300 MMboe
+```
+
+Unconventional Resources:
+
+Shale Economics:
+
+Well Economics:
+```
+Typical shale well:
+CAPEX: $6-8M
+EUR (Estimated Ultimate Recovery): 500k boe
+Finding & development cost: $12-16/boe
+
+Breakeven oil price: $40-55/bbl
+depending on basin and technology
+```
+
+Development Strategy:
+- Pad drilling (multiple wells per pad)
+- Manufacturing approach
+- Continuous improvement
+- Technology learning curve
+
+Type Curves:
+```
+Initial Production (IP): 500-1500 boe/d
+Month 1-12: 60-80% decline
+Year 2+: 5-10% decline
+
+Economic life: 20-30 years
+Active production: First 5-10 years
+```
+
+Oil Sands:
+
+Mining vs In-Situ:
+
+Mining (Shallow deposits):
+- CAPEX: $80-120k per bbl/day
+- OPEX: $25-35/bbl
+- Large scale (100k+ bbl/day)
+- Long life (40+ years)
+
+SAGD (Steam-Assisted Gravity Drainage):
+- CAPEX: $40-80k per bbl/day
+- OPEX: $20-30/bbl
+- Smaller scale (20-50k bbl/day)
+- Natural gas intensive
+
+Economic Threshold:
+```
+Sustainable oil price: $50-65/bbl
+Includes:
+- Carbon costs
+- Transportation
+- Quality discounts
+- Upgrading (if required)
+```
+
+Abandonment and Decommissioning:
+
+Cost Estimation:
+
+Onshore:
+- Well plugging: $50k-200k per well
+- Facility removal: $1-5M
+- Site remediation: $2-10M
+- Total: $5-20M for small field
+
+Offshore:
+- Well abandonment: $5-15M per well
+- Platform removal: $50-500M
+- Pipeline decommissioning: $1-3M per mile
+- Total: $100M-2B for major field
+
+Financial Provisions:
+
+Methods:
+- Escrow accounts
+- Letters of credit
+- Parent company guarantees
+- Abandonment funds
+
+Accounting:
+- Provision on balance sheet
+- Accrued over field life
+- Discounted to present value
+- Asset Retirement Obligation (ARO)
+
+Economic Impact:
+```
+NPV calculation must include abandonment cost
+
+ARO Present Value = Abandonment Cost / (1 + r)^n
+
+where n = field life
+
+Significant for:
+- Long-life fields
+- High discount rates
+- Marginal economics
+```
+
+Energy Transition Economics:
+
+Carbon Pricing:
+
+Mechanisms:
+- Carbon tax ($/tonne CO2)
+- Cap-and-trade systems
+- Offset markets
+- Regulatory compliance
+
+Impact on Economics:
+```
+CO2 Emission Intensity:
+- Oil production: 5-30 kg CO2/boe
+- Gas production: 2-15 kg CO2/boe
+- Oil sands: 60-100 kg CO2/boe
+
+At $50/tonne CO2:
+- Conventional: $0.25-1.50/boe
+- Oil sands: $3-5/boe
+
+Reduces NPV and raises breakeven price
+```
+
+Mitigation Strategies:
+- Energy efficiency
+- Renewable power
+- Flare reduction
+- Methane management
+- Carbon capture and storage (CCS)
+
+CCS Economics:
+```
+Capture cost: $40-80/tonne CO2
+Transport: $5-15/tonne (pipeline)
+Storage: $8-20/tonne
+Total: $50-115/tonne
+
+vs. Carbon price or tax credit
+
+EOR with CO2: Revenue from oil offsets cost
+Dedicated storage: Requires incentive/regulation
+```
+
+Stranded Assets:
+
+Risk Assessment:
+- Reserves at risk from policy
+- High-cost/high-carbon assets
+- Long-payback projects
+- Portfolio resilience testing
+
+Valuation Impact:
+- Shorter asset life assumptions
+- Higher discount rates
+- Probability-weighted scenarios
+- Impairment charges
+
+Diversification:
+- Natural gas (lower carbon)
+- Renewables
+- Hydrogen
+- New energy businesses
+
+Conclusion:
+
+Engineering economy in upstream oil & gas requires:
+- Rigorous economic analysis
+- Understanding of fiscal terms
+- Comprehensive risk assessment
+- Portfolio optimization
+- Adaptability to changing conditions
+
+Success factors:
+- Disciplined capital allocation
+- Cost management
+- Technical excellence
+- Risk management
+- Strategic foresight
+
+The industry faces challenges from energy transition, but fundamental economic principles remain: create value through disciplined investment in quality assets with strong economics.

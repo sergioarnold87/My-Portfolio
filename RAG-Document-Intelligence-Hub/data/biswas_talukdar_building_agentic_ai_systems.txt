@@ -1,0 +1,931 @@
+BUILDING AGENTIC AI SYSTEMS
+by Biswas & Talukdar
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: INTRODUCTION TO AGENTIC AI
+
+What Are AI Agents?
+
+An AI agent is an autonomous system that perceives its environment, makes decisions, and takes actions to achieve specific goals. Unlike traditional software that follows rigid instructions, agents exhibit adaptive behavior, learning, and goal-directed action.
+
+Key Characteristics of AI Agents:
+
+1. Autonomy
+   - Operate independently
+   - Make decisions without constant human input
+   - Self-directed behavior
+   - Goal-oriented actions
+
+2. Reactivity
+   - Perceive environment
+   - Respond to changes
+   - Real-time adaptation
+   - Event-driven behavior
+
+3. Pro-activeness
+   - Take initiative
+   - Plan ahead
+   - Anticipate needs
+   - Goal-driven behavior
+
+4. Social Ability
+   - Interact with other agents
+   - Collaborate with humans
+   - Communication protocols
+   - Negotiation capabilities
+
+Types of AI Agents:
+
+Simple Reflex Agents:
+- Condition-action rules
+- No memory of past
+- Fast but limited
+- Example: Thermostat
+
+Model-Based Agents:
+- Internal state model
+- Track environment changes
+- Better decision-making
+- Example: Robot navigation
+
+Goal-Based Agents:
+- Explicit goals
+- Plan to achieve goals
+- Consider future consequences
+- Example: GPS navigation
+
+Utility-Based Agents:
+- Optimize outcomes
+- Trade-offs between goals
+- Maximize utility function
+- Example: Trading bot
+
+Learning Agents:
+- Improve from experience
+- Adapt to new situations
+- Continuous learning
+- Example: Recommendation system
+
+The Agentic AI Architecture:
+
+```
+Environment
+    ↕
+Perception Module
+    ↓
+State Representation
+    ↓
+Decision Making (LLM Core)
+    ↓
+Action Selection
+    ↓
+Tool Execution
+    ↓
+Environment
+```
+
+Why LLMs Enable Better Agents:
+
+1. Natural Language Understanding
+   - Parse complex instructions
+   - Understand context
+   - Extract intent
+   - Handle ambiguity
+
+2. Reasoning Capabilities
+   - Chain-of-thought
+   - Multi-step planning
+   - Causal inference
+   - Analogical reasoning
+
+3. World Knowledge
+   - Pre-trained on vast data
+   - Common sense reasoning
+   - Domain knowledge
+   - Cultural understanding
+
+4. Code Generation
+   - Write and execute code
+   - Automate tasks
+   - API integration
+   - Dynamic tool creation
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: BUILDING BLOCKS OF AGENTIC SYSTEMS
+
+Core Components
+
+1. LLM as the Central Controller
+
+The LLM acts as the "brain" of the agent:
+
+```python
+class AgentCore:
+    def __init__(self, model="gpt-4"):
+        self.llm = OpenAI(model=model)
+        self.memory = []
+        self.tools = {}
+    
+    def think(self, observation):
+        """Process observation and decide next action"""
+        prompt = self.construct_prompt(observation)
+        response = self.llm.generate(prompt)
+        return self.parse_response(response)
+    
+    def construct_prompt(self, observation):
+        system_prompt = """
+        You are an AI agent. Given an observation, decide what action to take.
+        Available tools: {tools}
+        Previous actions: {history}
+        Current observation: {observation}
+        
+        Think step by step and choose an action.
+        """
+        return system_prompt.format(
+            tools=self.tools.keys(),
+            history=self.memory[-5:],
+            observation=observation
+        )
+```
+
+2. Tool Integration
+
+Tools extend agent capabilities:
+
+```python
+class Tool:
+    def __init__(self, name, description, function):
+        self.name = name
+        self.description = description
+        self.function = function
+    
+    def execute(self, *args, **kwargs):
+        return self.function(*args, **kwargs)
+
+# Define tools
+def search_web(query):
+    """Search the web for information"""
+    # Implementation
+    return search_results
+
+def calculate(expression):
+    """Perform mathematical calculations"""
+    return eval(expression)
+
+def send_email(to, subject, body):
+    """Send an email"""
+    # Implementation
+    return "Email sent"
+
+# Register tools
+agent.register_tool(Tool("search", "Search the web", search_web))
+agent.register_tool(Tool("calculator", "Perform calculations", calculate))
+agent.register_tool(Tool("email", "Send emails", send_email))
+```
+
+3. Memory Systems
+
+Short-Term Memory:
+- Current conversation context
+- Recent actions and observations
+- Active goals and plans
+
+```python
+class ShortTermMemory:
+    def __init__(self, max_size=10):
+        self.buffer = deque(maxlen=max_size)
+    
+    def add(self, item):
+        self.buffer.append(item)
+    
+    def get_context(self):
+        return list(self.buffer)
+```
+
+Long-Term Memory:
+- Learned facts and experiences
+- Vector database for retrieval
+- Episodic memory
+
+```python
+class LongTermMemory:
+    def __init__(self):
+        self.vectorstore = ChromaDB()
+        self.facts = {}
+    
+    def store(self, experience):
+        embedding = embed(experience)
+        self.vectorstore.add(embedding, experience)
+    
+    def retrieve(self, query, k=5):
+        query_embedding = embed(query)
+        results = self.vectorstore.search(query_embedding, k)
+        return results
+```
+
+4. Planning Module
+
+```python
+class Planner:
+    def __init__(self, llm):
+        self.llm = llm
+    
+    def create_plan(self, goal, context):
+        """Decompose goal into steps"""
+        prompt = f"""
+        Goal: {goal}
+        Context: {context}
+        
+        Break down this goal into concrete steps.
+        Return as numbered list.
+        """
+        plan = self.llm.generate(prompt)
+        return self.parse_plan(plan)
+    
+    def parse_plan(self, plan_text):
+        steps = []
+        for line in plan_text.split('\n'):
+            if line.strip() and line[0].isdigit():
+                steps.append(line.split('.', 1)[1].strip())
+        return steps
+```
+
+ReAct Pattern (Reasoning + Acting)
+
+The ReAct framework alternates between reasoning and acting:
+
+```python
+class ReActAgent:
+    def __init__(self, llm, tools):
+        self.llm = llm
+        self.tools = tools
+        self.history = []
+    
+    def run(self, task):
+        """Execute task using ReAct pattern"""
+        max_iterations = 10
+        
+        for i in range(max_iterations):
+            # Reasoning step
+            thought = self.think(task, self.history)
+            self.history.append(("Thought", thought))
+            
+            # Check if done
+            if "FINISH" in thought:
+                answer = self.extract_answer(thought)
+                return answer
+            
+            # Action step
+            action, action_input = self.parse_action(thought)
+            self.history.append(("Action", f"{action}[{action_input}]"))
+            
+            # Execute action
+            observation = self.execute_action(action, action_input)
+            self.history.append(("Observation", observation))
+        
+        return "Max iterations reached"
+    
+    def think(self, task, history):
+        prompt = f"""
+        Task: {task}
+        
+        History:
+        {self.format_history(history)}
+        
+        Thought: Let me think about what to do next.
+        Available actions: {list(self.tools.keys())}
+        
+        Think step by step. Choose an action or respond with FINISH[answer].
+        """
+        return self.llm.generate(prompt)
+    
+    def execute_action(self, action, action_input):
+        if action in self.tools:
+            return self.tools[action].execute(action_input)
+        return "Action not found"
+
+# Example usage
+agent = ReActAgent(llm, tools)
+result = agent.run("What is the capital of France and its population?")
+
+# Example trace:
+# Thought: I need to search for information about France's capital
+# Action: search["capital of France"]
+# Observation: Paris is the capital of France
+# Thought: Now I need the population
+# Action: search["population of Paris"]
+# Observation: Paris has approximately 2.2 million people
+# Thought: I have the answer
+# Action: FINISH[The capital of France is Paris with a population of ~2.2M]
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: ADVANCED AGENT PATTERNS
+
+Multi-Agent Systems
+
+Specialized Agents:
+
+```python
+class MultiAgentSystem:
+    def __init__(self):
+        self.agents = {}
+    
+    def register_agent(self, name, agent):
+        self.agents[name] = agent
+    
+    def delegate_task(self, task):
+        """Route task to appropriate specialist"""
+        task_type = self.classify_task(task)
+        agent = self.agents.get(task_type)
+        if agent:
+            return agent.execute(task)
+        return "No suitable agent found"
+
+# Specialized agents
+researcher = ResearchAgent(llm, search_tools)
+coder = CodingAgent(llm, dev_tools)
+writer = WritingAgent(llm)
+
+system = MultiAgentSystem()
+system.register_agent("research", researcher)
+system.register_agent("coding", coder)
+system.register_agent("writing", writer)
+```
+
+Agent Collaboration:
+
+```python
+class CollaborativeAgent:
+    def __init__(self, name, role, llm):
+        self.name = name
+        self.role = role
+        self.llm = llm
+        self.inbox = []
+    
+    def receive_message(self, from_agent, message):
+        self.inbox.append((from_agent, message))
+    
+    def process_inbox(self):
+        for sender, message in self.inbox:
+            response = self.handle_message(sender, message)
+            if response:
+                sender.receive_message(self, response)
+        self.inbox = []
+    
+    def handle_message(self, sender, message):
+        prompt = f"""
+        You are {self.name}, a {self.role} agent.
+        Message from {sender.name}: {message}
+        
+        How do you respond?
+        """
+        return self.llm.generate(prompt)
+
+# Create collaborative team
+pm = CollaborativeAgent("ProjectManager", "project manager", llm)
+dev = CollaborativeAgent("Developer", "software developer", llm)
+qa = CollaborativeAgent("QA", "quality assurance engineer", llm)
+
+# Communication
+pm.receive_message(dev, "Feature implementation complete")
+pm.process_inbox()  # PM responds to developer
+```
+
+Hierarchical Agent Systems:
+
+```python
+class HierarchicalAgent:
+    def __init__(self, name, subordinates=None):
+        self.name = name
+        self.subordinates = subordinates or []
+    
+    def execute_task(self, task):
+        # Decompose task
+        subtasks = self.decompose(task)
+        
+        # Delegate to subordinates
+        results = []
+        for subtask in subtasks:
+            agent = self.select_subordinate(subtask)
+            result = agent.execute_task(subtask)
+            results.append(result)
+        
+        # Synthesize results
+        return self.synthesize(results)
+    
+    def decompose(self, task):
+        """Break task into subtasks"""
+        prompt = f"Break down '{task}' into subtasks"
+        return self.llm.generate(prompt).split('\n')
+    
+    def select_subordinate(self, subtask):
+        """Choose best subordinate for subtask"""
+        # Simple round-robin or intelligent selection
+        return self.subordinates[0]
+    
+    def synthesize(self, results):
+        """Combine subordinate results"""
+        prompt = f"Synthesize these results: {results}"
+        return self.llm.generate(prompt)
+```
+
+Self-Improvement and Meta-Learning
+
+Reflection and Self-Critique:
+
+```python
+class ReflectiveAgent:
+    def __init__(self, llm):
+        self.llm = llm
+        self.performance_log = []
+    
+    def execute_with_reflection(self, task):
+        # Initial attempt
+        result = self.execute(task)
+        
+        # Self-critique
+        critique = self.reflect(task, result)
+        
+        # Improve if needed
+        if "unsatisfactory" in critique.lower():
+            result = self.improve(task, result, critique)
+        
+        # Log for learning
+        self.performance_log.append({
+            "task": task,
+            "result": result,
+            "critique": critique
+        })
+        
+        return result
+    
+    def reflect(self, task, result):
+        prompt = f"""
+        Task: {task}
+        Your result: {result}
+        
+        Critically evaluate your performance. What could be improved?
+        """
+        return self.llm.generate(prompt)
+    
+    def improve(self, task, result, critique):
+        prompt = f"""
+        Task: {task}
+        Previous attempt: {result}
+        Issues identified: {critique}
+        
+        Provide an improved solution addressing the critiques.
+        """
+        return self.llm.generate(prompt)
+```
+
+Learning from Experience:
+
+```python
+class LearningAgent:
+    def __init__(self, llm):
+        self.llm = llm
+        self.experience_db = []
+        self.strategies = {}
+    
+    def learn_from_experience(self):
+        """Extract patterns from past experiences"""
+        if len(self.experience_db) < 10:
+            return
+        
+        prompt = f"""
+        Analyze these past experiences and extract useful strategies:
+        {self.experience_db[-20:]}
+        
+        What patterns lead to success? What should be avoided?
+        """
+        insights = self.llm.generate(prompt)
+        self.strategies = self.parse_strategies(insights)
+    
+    def apply_learned_strategies(self, task):
+        """Use past lessons for current task"""
+        relevant_strategies = self.retrieve_strategies(task)
+        
+        prompt = f"""
+        Task: {task}
+        Relevant strategies from past experience:
+        {relevant_strategies}
+        
+        Apply these lessons to solve the task.
+        """
+        return self.llm.generate(prompt)
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: PRACTICAL AGENT IMPLEMENTATIONS
+
+Agent Frameworks
+
+LangChain Agents:
+
+```python
+from langchain.agents import initialize_agent, Tool
+from langchain.agents import AgentType
+from langchain.llms import OpenAI
+
+# Define tools
+tools = [
+    Tool(
+        name="Search",
+        func=search_function,
+        description="useful for searching information"
+    ),
+    Tool(
+        name="Calculator",
+        func=calculator_function,
+        description="useful for math calculations"
+    )
+]
+
+# Initialize agent
+llm = OpenAI(temperature=0)
+agent = initialize_agent(
+    tools,
+    llm,
+    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    verbose=True
+)
+
+# Run agent
+response = agent.run("What is the square root of 144 times the population of Tokyo?")
+```
+
+AutoGPT-style Agent:
+
+```python
+class AutoAgent:
+    def __init__(self, llm, goal):
+        self.llm = llm
+        self.goal = goal
+        self.tasks = []
+        self.completed = []
+    
+    def run(self):
+        """Autonomous execution loop"""
+        while not self.is_goal_achieved():
+            # Plan next tasks
+            if not self.tasks:
+                self.tasks = self.plan_tasks()
+            
+            # Execute next task
+            task = self.tasks.pop(0)
+            result = self.execute_task(task)
+            self.completed.append((task, result))
+            
+            # Self-evaluate
+            if not self.is_progress_made():
+                self.replan()
+        
+        return self.synthesize_results()
+    
+    def plan_tasks(self):
+        prompt = f"""
+        Goal: {self.goal}
+        Completed: {self.completed}
+        
+        What tasks need to be done next? List concrete actions.
+        """
+        plan = self.llm.generate(prompt)
+        return self.parse_tasks(plan)
+    
+    def is_goal_achieved(self):
+        prompt = f"""
+        Goal: {self.goal}
+        Completed tasks: {self.completed}
+        
+        Has the goal been achieved? Answer yes or no and explain.
+        """
+        response = self.llm.generate(prompt)
+        return "yes" in response.lower()
+```
+
+Specialized Agent Examples:
+
+1. Research Agent:
+
+```python
+class ResearchAgent:
+    def __init__(self, llm, search_tool, storage):
+        self.llm = llm
+        self.search = search_tool
+        self.storage = storage
+    
+    def research_topic(self, topic, depth=3):
+        """Conduct comprehensive research"""
+        findings = []
+        
+        # Initial search
+        queries = self.generate_search_queries(topic)
+        
+        for query in queries:
+            results = self.search(query)
+            findings.extend(results)
+        
+        # Follow-up questions
+        for _ in range(depth - 1):
+            followup = self.generate_followup_questions(findings)
+            for question in followup:
+                results = self.search(question)
+                findings.extend(results)
+        
+        # Synthesize
+        report = self.synthesize_findings(topic, findings)
+        self.storage.save(topic, report)
+        
+        return report
+    
+    def generate_search_queries(self, topic):
+        prompt = f"""
+        Generate 5 diverse search queries to research: {topic}
+        Queries should cover different aspects and perspectives.
+        """
+        return self.llm.generate(prompt).split('\n')
+    
+    def synthesize_findings(self, topic, findings):
+        prompt = f"""
+        Research topic: {topic}
+        Findings: {findings}
+        
+        Synthesize a comprehensive report with:
+        1. Summary
+        2. Key findings
+        3. Different perspectives
+        4. Conclusions
+        """
+        return self.llm.generate(prompt)
+```
+
+2. Code Agent:
+
+```python
+class CodeAgent:
+    def __init__(self, llm, executor):
+        self.llm = llm
+        self.executor = executor
+    
+    def write_and_test_code(self, specification):
+        """Write code, test it, and iterate"""
+        max_attempts = 3
+        
+        for attempt in range(max_attempts):
+            # Generate code
+            code = self.generate_code(specification)
+            
+            # Test code
+            test_results = self.executor.run_tests(code)
+            
+            if test_results.all_passed:
+                return code
+            
+            # Debug and fix
+            specification = self.update_spec_with_errors(
+                specification, 
+                test_results
+            )
+        
+        return None
+    
+    def generate_code(self, spec):
+        prompt = f"""
+        Write Python code for:
+        {spec}
+        
+        Include error handling and documentation.
+        """
+        return self.llm.generate(prompt)
+```
+
+3. Personal Assistant Agent:
+
+```python
+class PersonalAssistant:
+    def __init__(self, llm, tools, user_profile):
+        self.llm = llm
+        self.tools = tools
+        self.user_profile = user_profile
+        self.context = []
+    
+    def handle_request(self, user_input):
+        """Process natural language request"""
+        # Understand intent
+        intent = self.classify_intent(user_input)
+        
+        # Extract parameters
+        params = self.extract_parameters(user_input)
+        
+        # Execute appropriate action
+        if intent == "schedule":
+            return self.schedule_event(params)
+        elif intent == "email":
+            return self.send_email(params)
+        elif intent == "search":
+            return self.search_and_summarize(params)
+        elif intent == "reminder":
+            return self.set_reminder(params)
+        else:
+            return self.general_query(user_input)
+    
+    def schedule_event(self, params):
+        calendar = self.tools["calendar"]
+        conflicts = calendar.check_conflicts(params["time"])
+        
+        if conflicts:
+            alternatives = calendar.suggest_alternatives(params["time"])
+            return f"Conflict found. Alternatives: {alternatives}"
+        
+        calendar.create_event(params)
+        return f"Event scheduled: {params}"
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 5: DEPLOYMENT AND PRODUCTION
+
+Safety and Reliability
+
+Guardrails:
+
+```python
+class SafeAgent:
+    def __init__(self, llm, guardrails):
+        self.llm = llm
+        self.guardrails = guardrails
+    
+    def execute_safely(self, action):
+        # Pre-execution check
+        if not self.guardrails.is_safe(action):
+            return "Action blocked by safety guardrails"
+        
+        # Execute with monitoring
+        try:
+            result = self.execute(action)
+            
+            # Post-execution validation
+            if not self.guardrails.validate_result(result):
+                return "Result failed validation"
+            
+            return result
+        except Exception as e:
+            self.guardrails.log_error(e)
+            return f"Error: {e}"
+
+class Guardrails:
+    def __init__(self):
+        self.blacklist = ["rm -rf", "DROP TABLE", "delete *"]
+        self.whitelist_domains = ["example.com"]
+    
+    def is_safe(self, action):
+        # Check blacklist
+        for dangerous in self.blacklist:
+            if dangerous in str(action):
+                return False
+        
+        # Check resource limits
+        if self.exceeds_limits(action):
+            return False
+        
+        return True
+```
+
+Error Handling and Recovery:
+
+```python
+class ResilientAgent:
+    def __init__(self, llm):
+        self.llm = llm
+        self.max_retries = 3
+    
+    def execute_with_retry(self, task):
+        for attempt in range(self.max_retries):
+            try:
+                result = self.execute(task)
+                return result
+            except Exception as e:
+                if attempt < self.max_retries - 1:
+                    # Learn from error
+                    task = self.adjust_task_after_error(task, e)
+                else:
+                    # Fallback strategy
+                    return self.fallback(task)
+    
+    def adjust_task_after_error(self, task, error):
+        prompt = f"""
+        Task failed: {task}
+        Error: {error}
+        
+        Suggest an adjusted approach to avoid this error.
+        """
+        adjustment = self.llm.generate(prompt)
+        return adjustment
+```
+
+Monitoring and Observability:
+
+```python
+class MonitoredAgent:
+    def __init__(self, llm):
+        self.llm = llm
+        self.metrics = defaultdict(list)
+    
+    def execute_with_monitoring(self, task):
+        start_time = time.time()
+        
+        try:
+            result = self.execute(task)
+            success = True
+        except Exception as e:
+            result = str(e)
+            success = False
+        
+        # Log metrics
+        self.metrics['latency'].append(time.time() - start_time)
+        self.metrics['success_rate'].append(1 if success else 0)
+        self.metrics['task_type'].append(type(task).__name__)
+        
+        # Alert on anomalies
+        if self.detect_anomaly():
+            self.send_alert()
+        
+        return result
+```
+
+Cost Optimization:
+
+```python
+class CostOptimizedAgent:
+    def __init__(self, llm, budget):
+        self.llm = llm
+        self.budget = budget
+        self.spent = 0
+    
+    def execute_with_budget(self, task):
+        # Estimate cost
+        estimated_cost = self.estimate_cost(task)
+        
+        if self.spent + estimated_cost > self.budget:
+            # Use cheaper alternative
+            return self.execute_with_cheaper_model(task)
+        
+        result = self.execute(task)
+        self.spent += self.calculate_actual_cost(result)
+        
+        return result
+    
+    def execute_with_cheaper_model(self, task):
+        # Use GPT-3.5 instead of GPT-4
+        cheap_llm = OpenAI(model="gpt-3.5-turbo")
+        return cheap_llm.generate(task)
+```
+
+Scalability:
+
+```python
+from celery import Celery
+
+app = Celery('agent_tasks', broker='redis://localhost:6379')
+
+@app.task
+def process_agent_task(task_data):
+    agent = Agent(llm)
+    result = agent.execute(task_data)
+    return result
+
+# Distribute tasks
+for task in tasks:
+    process_agent_task.delay(task)
+```
+
+Best Practices:
+
+✓ Start simple, add complexity gradually
+✓ Implement comprehensive logging
+✓ Set clear boundaries and constraints
+✓ Monitor costs and performance
+✓ Build in error handling and recovery
+✓ Test extensively before deployment
+✓ Keep humans in the loop for critical decisions
+✓ Version control agent configurations
+✓ Implement gradual rollout
+✓ Maintain audit trails
+
+Future of Agentic AI:
+
+The field is rapidly evolving toward:
+- More autonomous multi-agent systems
+- Better reasoning and planning
+- Improved safety and alignment
+- Seamless tool integration
+- Continuous learning
+- Human-AI collaboration
+
+Building reliable agentic systems requires balancing autonomy with control, capability with safety, and innovation with responsibility.

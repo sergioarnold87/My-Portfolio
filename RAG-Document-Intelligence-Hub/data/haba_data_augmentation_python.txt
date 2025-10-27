@@ -1,0 +1,810 @@
+DATA AUGMENTATION WITH PYTHON
+by Haba
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: FOUNDATIONS OF DATA AUGMENTATION
+
+What is Data Augmentation?
+
+Data augmentation is the technique of artificially increasing the size and diversity of training datasets by creating modified versions of existing data. It's a powerful regularization technique that improves model generalization and reduces overfitting.
+
+Why Data Augmentation Matters:
+
+1. Limited Data Problem
+   - Collecting labeled data is expensive
+   - Some domains have scarce data
+   - Privacy constraints limit data sharing
+   - Augmentation provides synthetic samples
+
+2. Model Generalization
+   - Exposes model to variations
+   - Reduces overfitting
+   - Improves robustness
+   - Better real-world performance
+
+3. Class Imbalance
+   - Balance underrepresented classes
+   - Generate minority class samples
+   - Improve fairness
+   - Boost minority class performance
+
+4. Cost Efficiency
+   - Cheaper than collecting new data
+   - Faster than manual labeling
+   - Scalable to large datasets
+   - Automated pipelines
+
+Types of Data Augmentation:
+
+Traditional Augmentation:
+- Geometric transformations
+- Color space adjustments
+- Noise injection
+- Domain-specific operations
+
+Advanced Augmentation:
+- Generative models (GANs, VAEs)
+- Mixing techniques (Mixup, CutMix)
+- Automated augmentation (AutoAugment)
+- Adversarial examples
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: IMAGE AUGMENTATION
+
+Basic Image Transformations
+
+1. Geometric Transformations
+
+Rotation:
+```python
+from PIL import Image
+import random
+
+def rotate_image(image, angle_range=(-30, 30)):
+    angle = random.uniform(*angle_range)
+    return image.rotate(angle)
+
+# Usage
+img = Image.open('photo.jpg')
+rotated = rotate_image(img)
+```
+
+Flipping:
+```python
+def flip_image(image, horizontal=True, vertical=False):
+    if horizontal:
+        image = image.transpose(Image.FLIP_LEFT_RIGHT)
+    if vertical:
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+    return image
+```
+
+Scaling and Cropping:
+```python
+def random_crop(image, crop_size=(224, 224)):
+    width, height = image.size
+    crop_w, crop_h = crop_size
+    
+    left = random.randint(0, width - crop_w)
+    top = random.randint(0, height - crop_h)
+    
+    return image.crop((left, top, left + crop_w, top + crop_h))
+```
+
+Translation (Shifting):
+```python
+import numpy as np
+from scipy import ndimage
+
+def translate_image(image, max_shift=20):
+    shift_x = random.randint(-max_shift, max_shift)
+    shift_y = random.randint(-max_shift, max_shift)
+    return ndimage.shift(image, (shift_y, shift_x, 0))
+```
+
+2. Color Space Augmentation
+
+Brightness Adjustment:
+```python
+from PIL import ImageEnhance
+
+def adjust_brightness(image, factor_range=(0.5, 1.5)):
+    factor = random.uniform(*factor_range)
+    enhancer = ImageEnhance.Brightness(image)
+    return enhancer.enhance(factor)
+```
+
+Contrast Adjustment:
+```python
+def adjust_contrast(image, factor_range=(0.5, 1.5)):
+    factor = random.uniform(*factor_range)
+    enhancer = ImageEnhance.Contrast(image)
+    return enhancer.enhance(factor)
+```
+
+Saturation and Hue:
+```python
+def adjust_color(image):
+    # Saturation
+    if random.random() > 0.5:
+        factor = random.uniform(0.5, 1.5)
+        enhancer = ImageEnhance.Color(image)
+        image = enhancer.enhance(factor)
+    
+    # Hue shift (convert to HSV)
+    image_hsv = image.convert('HSV')
+    h, s, v = image_hsv.split()
+    h_array = np.array(h)
+    h_array = (h_array + random.randint(-10, 10)) % 256
+    h = Image.fromarray(h_array.astype('uint8'))
+    image = Image.merge('HSV', (h, s, v)).convert('RGB')
+    
+    return image
+```
+
+3. Noise and Blur
+
+Gaussian Noise:
+```python
+def add_gaussian_noise(image, mean=0, std=25):
+    img_array = np.array(image)
+    noise = np.random.normal(mean, std, img_array.shape)
+    noisy_img = np.clip(img_array + noise, 0, 255).astype('uint8')
+    return Image.fromarray(noisy_img)
+```
+
+Salt and Pepper Noise:
+```python
+def salt_pepper_noise(image, prob=0.01):
+    img_array = np.array(image)
+    output = img_array.copy()
+    
+    # Salt
+    num_salt = np.ceil(prob * img_array.size * 0.5)
+    coords = [np.random.randint(0, i - 1, int(num_salt))
+              for i in img_array.shape]
+    output[coords[0], coords[1]] = 255
+    
+    # Pepper
+    num_pepper = np.ceil(prob * img_array.size * 0.5)
+    coords = [np.random.randint(0, i - 1, int(num_pepper))
+              for i in img_array.shape]
+    output[coords[0], coords[1]] = 0
+    
+    return Image.fromarray(output)
+```
+
+Gaussian Blur:
+```python
+from PIL import ImageFilter
+
+def blur_image(image, radius_range=(0, 3)):
+    radius = random.uniform(*radius_range)
+    return image.filter(ImageFilter.GaussianBlur(radius=radius))
+```
+
+Advanced Image Augmentation
+
+1. Cutout / Random Erasing
+
+```python
+def random_erasing(image, prob=0.5, area_range=(0.02, 0.4)):
+    if random.random() > prob:
+        return image
+    
+    img_array = np.array(image)
+    h, w, c = img_array.shape
+    
+    # Random area
+    area = random.uniform(*area_range) * h * w
+    aspect_ratio = random.uniform(0.3, 1/0.3)
+    
+    erase_h = int(np.sqrt(area * aspect_ratio))
+    erase_w = int(np.sqrt(area / aspect_ratio))
+    
+    if erase_h < h and erase_w < w:
+        x = random.randint(0, w - erase_w)
+        y = random.randint(0, h - erase_h)
+        
+        # Erase with random color or mean
+        img_array[y:y+erase_h, x:x+erase_w, :] = random.randint(0, 255)
+    
+    return Image.fromarray(img_array)
+```
+
+2. Mixup
+
+```python
+def mixup(image1, image2, label1, label2, alpha=0.2):
+    lambda_param = np.random.beta(alpha, alpha)
+    
+    mixed_image = lambda_param * np.array(image1) + \
+                  (1 - lambda_param) * np.array(image2)
+    mixed_label = lambda_param * label1 + (1 - lambda_param) * label2
+    
+    return Image.fromarray(mixed_image.astype('uint8')), mixed_label
+```
+
+3. CutMix
+
+```python
+def cutmix(image1, image2, label1, label2, alpha=1.0):
+    lam = np.random.beta(alpha, alpha)
+    
+    img1_array = np.array(image1)
+    img2_array = np.array(image2)
+    h, w, c = img1_array.shape
+    
+    # Random box
+    cut_rat = np.sqrt(1. - lam)
+    cut_w = int(w * cut_rat)
+    cut_h = int(h * cut_rat)
+    
+    cx = np.random.randint(w)
+    cy = np.random.randint(h)
+    
+    bbx1 = np.clip(cx - cut_w // 2, 0, w)
+    bby1 = np.clip(cy - cut_h // 2, 0, h)
+    bbx2 = np.clip(cx + cut_w // 2, 0, w)
+    bby2 = np.clip(cy + cut_h // 2, 0, h)
+    
+    img1_array[bby1:bby2, bbx1:bbx2, :] = img2_array[bby1:bby2, bbx1:bbx2, :]
+    
+    # Adjust lambda
+    lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (w * h))
+    mixed_label = lam * label1 + (1 - lam) * label2
+    
+    return Image.fromarray(img1_array), mixed_label
+```
+
+4. AutoAugment Policy
+
+```python
+from torchvision import transforms
+
+def autoaugment_policy():
+    return transforms.AutoAugment(
+        policy=transforms.AutoAugmentPolicy.IMAGENET
+    )
+
+# Usage with PyTorch
+transform = transforms.Compose([
+    transforms.AutoAugment(),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                        std=[0.229, 0.224, 0.225])
+])
+```
+
+Using Albumentations Library:
+
+```python
+import albumentations as A
+
+# Define augmentation pipeline
+transform = A.Compose([
+    A.RandomRotate90(p=0.5),
+    A.Flip(p=0.5),
+    A.Transpose(p=0.5),
+    A.OneOf([
+        A.GaussNoise(),
+        A.GaussianBlur(),
+        A.MotionBlur(),
+    ], p=0.3),
+    A.OneOf([
+        A.OpticalDistortion(),
+        A.GridDistortion(),
+        A.ElasticTransform(),
+    ], p=0.3),
+    A.CLAHE(p=0.3),
+    A.RandomBrightnessContrast(p=0.3),
+    A.RandomGamma(p=0.3),
+    A.HueSaturationValue(p=0.3),
+])
+
+# Apply
+augmented = transform(image=np.array(image))
+augmented_image = augmented['image']
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: TEXT AUGMENTATION
+
+Text Augmentation Techniques
+
+1. Synonym Replacement
+
+```python
+from nltk.corpus import wordnet
+import random
+
+def get_synonyms(word):
+    synonyms = set()
+    for syn in wordnet.synsets(word):
+        for lemma in syn.lemmas():
+            if lemma.name() != word:
+                synonyms.add(lemma.name().replace('_', ' '))
+    return list(synonyms)
+
+def synonym_replacement(text, n=2):
+    words = text.split()
+    new_words = words.copy()
+    random_word_list = list(set([word for word in words if word.isalnum()]))
+    random.shuffle(random_word_list)
+    
+    num_replaced = 0
+    for random_word in random_word_list:
+        synonyms = get_synonyms(random_word)
+        if len(synonyms) > 0:
+            synonym = random.choice(synonyms)
+            new_words = [synonym if word == random_word else word 
+                        for word in new_words]
+            num_replaced += 1
+        if num_replaced >= n:
+            break
+    
+    return ' '.join(new_words)
+```
+
+2. Random Insertion
+
+```python
+def random_insertion(text, n=1):
+    words = text.split()
+    for _ in range(n):
+        add_word = random.choice(words)
+        synonyms = get_synonyms(add_word)
+        if len(synonyms) > 0:
+            insert_word = random.choice(synonyms)
+            position = random.randint(0, len(words))
+            words.insert(position, insert_word)
+    return ' '.join(words)
+```
+
+3. Random Swap
+
+```python
+def random_swap(text, n=1):
+    words = text.split()
+    for _ in range(n):
+        if len(words) >= 2:
+            idx1, idx2 = random.sample(range(len(words)), 2)
+            words[idx1], words[idx2] = words[idx2], words[idx1]
+    return ' '.join(words)
+```
+
+4. Random Deletion
+
+```python
+def random_deletion(text, p=0.1):
+    words = text.split()
+    if len(words) == 1:
+        return text
+    
+    new_words = []
+    for word in words:
+        if random.random() > p:
+            new_words.append(word)
+    
+    # If all deleted, return random word
+    if len(new_words) == 0:
+        return random.choice(words)
+    
+    return ' '.join(new_words)
+```
+
+5. Back Translation
+
+```python
+from transformers import MarianMTModel, MarianTokenizer
+
+def back_translation(text, intermediate_lang='fr'):
+    # English -> French
+    model_name_en_fr = f'Helsinki-NLP/opus-mt-en-{intermediate_lang}'
+    tokenizer_en_fr = MarianTokenizer.from_pretrained(model_name_en_fr)
+    model_en_fr = MarianMTModel.from_pretrained(model_name_en_fr)
+    
+    # Translate to intermediate language
+    translated = model_en_fr.generate(
+        **tokenizer_en_fr(text, return_tensors="pt", padding=True)
+    )
+    intermediate = tokenizer_en_fr.decode(translated[0], skip_special_tokens=True)
+    
+    # French -> English
+    model_name_fr_en = f'Helsinki-NLP/opus-mt-{intermediate_lang}-en'
+    tokenizer_fr_en = MarianTokenizer.from_pretrained(model_name_fr_en)
+    model_fr_en = MarianMTModel.from_pretrained(model_name_fr_en)
+    
+    # Translate back to English
+    back_translated = model_fr_en.generate(
+        **tokenizer_fr_en(intermediate, return_tensors="pt", padding=True)
+    )
+    result = tokenizer_fr_en.decode(back_translated[0], skip_special_tokens=True)
+    
+    return result
+```
+
+6. Contextual Word Embeddings (BERT-based)
+
+```python
+from transformers import pipeline
+
+def contextual_word_replacement(text, num_replacements=2):
+    unmasker = pipeline('fill-mask', model='bert-base-uncased')
+    
+    words = text.split()
+    for _ in range(num_replacements):
+        # Mask a random word
+        idx = random.randint(0, len(words) - 1)
+        masked_text = ' '.join(words[:idx] + ['[MASK]'] + words[idx+1:])
+        
+        # Get predictions
+        predictions = unmasker(masked_text)
+        # Replace with top prediction (excluding original)
+        for pred in predictions:
+            if pred['token_str'].strip() != words[idx]:
+                words[idx] = pred['token_str'].strip()
+                break
+    
+    return ' '.join(words)
+```
+
+7. Paraphrasing with T5
+
+```python
+from transformers import T5Tokenizer, T5ForConditionalGeneration
+
+def paraphrase_t5(text):
+    tokenizer = T5Tokenizer.from_pretrained('t5-base')
+    model = T5ForConditionalGeneration.from_pretrained('t5-base')
+    
+    input_text = f"paraphrase: {text}"
+    inputs = tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
+    
+    outputs = model.generate(
+        inputs['input_ids'],
+        max_length=512,
+        num_return_sequences=3,
+        num_beams=5,
+        temperature=1.5
+    )
+    
+    paraphrases = [tokenizer.decode(output, skip_special_tokens=True) 
+                   for output in outputs]
+    return paraphrases
+```
+
+NLP Augmentation Library - nlpaug:
+
+```python
+import nlpaug.augmenter.word as naw
+import nlpaug.augmenter.sentence as nas
+
+# Word-level augmentation
+aug_synonym = naw.SynonymAug(aug_src='wordnet')
+aug_word2vec = naw.WordEmbsAug(model_type='word2vec',
+                                model_path='GoogleNews-vectors-negative300.bin')
+aug_bert = naw.ContextualWordEmbsAug(model_path='bert-base-uncased', action="substitute")
+
+# Sentence-level augmentation
+aug_backtranslation = nas.BackTranslationAug(
+    from_model_name='facebook/wmt19-en-de',
+    to_model_name='facebook/wmt19-de-en'
+)
+
+# Usage
+text = "The quick brown fox jumps over the lazy dog"
+augmented_synonym = aug_synonym.augment(text)
+augmented_bert = aug_bert.augment(text)
+augmented_back = aug_backtranslation.augment(text)
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: TABULAR DATA AUGMENTATION
+
+Tabular Augmentation Strategies
+
+1. SMOTE (Synthetic Minority Over-sampling Technique)
+
+```python
+from imblearn.over_sampling import SMOTE
+import pandas as pd
+
+def apply_smote(X, y, sampling_strategy='auto'):
+    smote = SMOTE(sampling_strategy=sampling_strategy, random_state=42)
+    X_resampled, y_resampled = smote.fit_resample(X, y)
+    return X_resampled, y_resampled
+
+# Usage
+X_train_balanced, y_train_balanced = apply_smote(X_train, y_train)
+```
+
+2. ADASYN (Adaptive Synthetic Sampling)
+
+```python
+from imblearn.over_sampling import ADASYN
+
+def apply_adasyn(X, y):
+    adasyn = ADASYN(random_state=42)
+    X_resampled, y_resampled = adasyn.fit_resample(X, y)
+    return X_resampled, y_resampled
+```
+
+3. Gaussian Noise Addition
+
+```python
+def add_gaussian_noise_tabular(df, columns, noise_level=0.1):
+    df_augmented = df.copy()
+    for col in columns:
+        std = df[col].std()
+        noise = np.random.normal(0, std * noise_level, size=len(df))
+        df_augmented[col] = df[col] + noise
+    return df_augmented
+```
+
+4. Random Under-sampling and Over-sampling
+
+```python
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+
+def balance_dataset(X, y, method='over'):
+    if method == 'over':
+        sampler = RandomOverSampler(random_state=42)
+    else:
+        sampler = RandomUnderSampler(random_state=42)
+    
+    X_resampled, y_resampled = sampler.fit_resample(X, y)
+    return X_resampled, y_resampled
+```
+
+5. Mixup for Tabular Data
+
+```python
+def mixup_tabular(X1, X2, y1, y2, alpha=0.2):
+    lambda_param = np.random.beta(alpha, alpha)
+    X_mixed = lambda_param * X1 + (1 - lambda_param) * X2
+    y_mixed = lambda_param * y1 + (1 - lambda_param) * y2
+    return X_mixed, y_mixed
+```
+
+6. CTGAN (Conditional Tabular GAN)
+
+```python
+from ctgan import CTGAN
+
+def generate_synthetic_tabular(df, discrete_columns, epochs=300):
+    # Train GAN
+    ctgan = CTGAN(epochs=epochs)
+    ctgan.fit(df, discrete_columns)
+    
+    # Generate synthetic samples
+    synthetic_data = ctgan.sample(len(df))
+    return synthetic_data
+
+# Usage
+discrete_cols = ['category', 'status']
+synthetic_df = generate_synthetic_tabular(original_df, discrete_cols)
+```
+
+Time Series Augmentation
+
+1. Jittering
+
+```python
+def jitter(series, sigma=0.03):
+    noise = np.random.normal(0, sigma, len(series))
+    return series + noise
+```
+
+2. Scaling
+
+```python
+def scaling(series, sigma=0.1):
+    factor = np.random.normal(1, sigma)
+    return series * factor
+```
+
+3. Time Warping
+
+```python
+from scipy.interpolate import interp1d
+
+def time_warp(series, sigma=0.2):
+    orig_steps = np.arange(len(series))
+    random_warps = np.random.normal(1, sigma, len(series))
+    cumsum_warps = np.cumsum(random_warps)
+    warped_steps = cumsum_warps / cumsum_warps[-1] * (len(series) - 1)
+    
+    interpolator = interp1d(orig_steps, series, kind='cubic')
+    warped_series = interpolator(warped_steps)
+    return warped_series
+```
+
+4. Window Slicing
+
+```python
+def window_slice(series, slice_ratio=0.9):
+    slice_length = int(len(series) * slice_ratio)
+    start = random.randint(0, len(series) - slice_length)
+    return series[start:start + slice_length]
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 5: AUDIO AND ADVANCED TECHNIQUES
+
+Audio Augmentation
+
+1. Time Stretching
+
+```python
+import librosa
+
+def time_stretch(audio, rate=1.2):
+    return librosa.effects.time_stretch(audio, rate=rate)
+```
+
+2. Pitch Shifting
+
+```python
+def pitch_shift(audio, sr, n_steps=2):
+    return librosa.effects.pitch_shift(audio, sr=sr, n_steps=n_steps)
+```
+
+3. Adding Background Noise
+
+```python
+def add_noise(audio, noise_factor=0.005):
+    noise = np.random.randn(len(audio))
+    augmented = audio + noise_factor * noise
+    return augmented
+```
+
+4. SpecAugment (for spectrograms)
+
+```python
+def spec_augment(spec, num_mask=2, freq_masking=0.15, time_masking=0.20):
+    spec = spec.copy()
+    num_frames = spec.shape[1]
+    num_freqs = spec.shape[0]
+    
+    # Frequency masking
+    for _ in range(num_mask):
+        f = np.random.randint(0, int(freq_masking * num_freqs))
+        f0 = np.random.randint(0, num_freqs - f)
+        spec[f0:f0+f, :] = 0
+    
+    # Time masking
+    for _ in range(num_mask):
+        t = np.random.randint(0, int(time_masking * num_frames))
+        t0 = np.random.randint(0, num_frames - t)
+        spec[:, t0:t0+t] = 0
+    
+    return spec
+```
+
+Generative Models for Augmentation
+
+1. VAE (Variational Autoencoder)
+
+```python
+import torch
+import torch.nn as nn
+
+class VAE(nn.Module):
+    def __init__(self, input_dim, latent_dim):
+        super(VAE, self).__init__()
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 128),
+            nn.ReLU()
+        )
+        self.fc_mu = nn.Linear(128, latent_dim)
+        self.fc_var = nn.Linear(128, latent_dim)
+        
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 256),
+            nn.ReLU(),
+            nn.Linear(256, input_dim),
+            nn.Sigmoid()
+        )
+    
+    def encode(self, x):
+        h = self.encoder(x)
+        return self.fc_mu(h), self.fc_var(h)
+    
+    def reparameterize(self, mu, log_var):
+        std = torch.exp(0.5 * log_var)
+        eps = torch.randn_like(std)
+        return mu + eps * std
+    
+    def decode(self, z):
+        return self.decoder(z)
+    
+    def forward(self, x):
+        mu, log_var = self.encode(x)
+        z = self.reparameterize(mu, log_var)
+        return self.decode(z), mu, log_var
+
+# Generate new samples
+def generate_samples(vae, num_samples, latent_dim):
+    vae.eval()
+    with torch.no_grad():
+        z = torch.randn(num_samples, latent_dim)
+        samples = vae.decode(z)
+    return samples
+```
+
+2. GAN-based Augmentation
+
+```python
+# Generator
+class Generator(nn.Module):
+    def __init__(self, latent_dim, output_dim):
+        super(Generator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(latent_dim, 128),
+            nn.LeakyReLU(0.2),
+            nn.Linear(128, 256),
+            nn.LeakyReLU(0.2),
+            nn.Linear(256, output_dim),
+            nn.Tanh()
+        )
+    
+    def forward(self, z):
+        return self.model(z)
+
+# Discriminator
+class Discriminator(nn.Module):
+    def __init__(self, input_dim):
+        super(Discriminator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 256),
+            nn.LeakyReLU(0.2),
+            nn.Linear(256, 128),
+            nn.LeakyReLU(0.2),
+            nn.Linear(128, 1),
+            nn.Sigmoid()
+        )
+    
+    def forward(self, x):
+        return self.model(x)
+```
+
+Best Practices
+
+1. Domain-Specific Considerations
+   - Understand data characteristics
+   - Preserve important invariances
+   - Test augmentations on validation set
+   - Monitor for unrealistic samples
+
+2. Augmentation Pipeline Design
+   - Start with simple augmentations
+   - Gradually add complexity
+   - Balance diversity vs realism
+   - Version control augmentation policies
+
+3. Evaluation
+   - Measure model performance with/without augmentation
+   - Check for data leakage
+   - Validate on real test data
+   - Monitor for bias introduction
+
+4. Computational Efficiency
+   - On-the-fly vs pre-computed augmentation
+   - GPU acceleration where possible
+   - Cache expensive operations
+   - Parallelize data loading
+
+Conclusion:
+
+Data augmentation is a critical tool in the ML practitioner's toolkit. When applied thoughtfully, it can significantly improve model performance, especially with limited data. The key is understanding your domain, choosing appropriate techniques, and validating that augmentations help rather than hurt.

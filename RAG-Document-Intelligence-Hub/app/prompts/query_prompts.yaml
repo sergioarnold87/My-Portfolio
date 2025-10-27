@@ -1,0 +1,211 @@
+# Query Prompts for RAG System
+# Templates for different types of queries
+
+basic_qa:
+  description: "Basic question-answering"
+  template: |
+    Context from the document:
+    {{context}}
+    
+    User question:
+    {{question}}
+    
+    Answer the question concisely using only the context above.
+    Include citations like (Section X) or (Page Y) when possible.
+
+detailed_analysis:
+  description: "In-depth analysis with reasoning"
+  template: |
+    Context:
+    {{context}}
+    
+    Question:
+    {{question}}
+    
+    Provide a detailed analysis that:
+    1. Directly answers the question
+    2. Explains the reasoning and context
+    3. Includes relevant examples from the text
+    4. Cites specific sections or pages
+    
+    Analysis:
+
+comparison:
+  description: "Compare concepts or approaches"
+  template: |
+    Context:
+    {{context}}
+    
+    Comparison request:
+    {{question}}
+    
+    Compare the concepts systematically:
+    
+    **Similarities:**
+    - [List key similarities]
+    
+    **Differences:**
+    - [List key differences]
+    
+    **Use cases:**
+    - When to use each approach
+    
+    **Conclusion:**
+    - [Brief synthesis]
+
+definition:
+  description: "Define terms or concepts"
+  template: |
+    Context:
+    {{context}}
+    
+    Term to define:
+    {{question}}
+    
+    Provide a clear definition that includes:
+    1. Core meaning
+    2. Key characteristics
+    3. Practical example (if available in context)
+    4. Related concepts
+    
+    Definition:
+
+explanation:
+  description: "Explain how something works"
+  template: |
+    Context:
+    {{context}}
+    
+    Explain:
+    {{question}}
+    
+    Provide a step-by-step explanation:
+    1. Start with a high-level overview
+    2. Break down the process or concept
+    3. Explain the reasoning or mechanism
+    4. Include examples from the context
+    5. Highlight important considerations
+    
+    Explanation:
+
+summarization:
+  description: "Summarize content"
+  template: |
+    Context:
+    {{context}}
+    
+    Summarization request:
+    {{question}}
+    
+    Provide a structured summary:
+    
+    **Main Points:**
+    - [Key point 1]
+    - [Key point 2]
+    - [Key point 3]
+    
+    **Details:**
+    - [Supporting details]
+    
+    **Significance:**
+    - [Why this matters]
+
+listing:
+  description: "List items or concepts"
+  template: |
+    Context:
+    {{context}}
+    
+    List request:
+    {{question}}
+    
+    Provide a comprehensive list:
+    
+    1. **[Item 1]**: [Brief description]
+    2. **[Item 2]**: [Brief description]
+    3. **[Item 3]**: [Brief description]
+    
+    [Continue as needed]
+    
+    Total items: [Count]
+
+procedural:
+  description: "Step-by-step procedures"
+  template: |
+    Context:
+    {{context}}
+    
+    Procedure request:
+    {{question}}
+    
+    Provide clear, actionable steps:
+    
+    **Prerequisites:**
+    - [What's needed before starting]
+    
+    **Steps:**
+    1. [First step with details]
+    2. [Second step with details]
+    3. [Continue...]
+    
+    **Expected outcome:**
+    - [What should result]
+    
+    **Common pitfalls:**
+    - [Things to avoid]
+
+conceptual_relationship:
+  description: "Explore relationships between concepts"
+  template: |
+    Context:
+    {{context}}
+    
+    Relationship analysis:
+    {{question}}
+    
+    Analyze the relationships:
+    
+    **Direct connections:**
+    - [How concepts directly relate]
+    
+    **Dependencies:**
+    - [What depends on what]
+    
+    **Implications:**
+    - [Impact of one concept on another]
+    
+    **Practical applications:**
+    - [How these relationships matter in practice]
+
+with_citations:
+  description: "Answer with explicit source citations"
+  template: |
+    Context:
+    {{context}}
+    
+    Question:
+    {{question}}
+    
+    Answer the question with explicit citations for each claim:
+    
+    [Your answer here]
+    
+    Format citations as: (Source 1, Chunk X) or (Page Y)
+    
+    Every factual statement should have a citation.
+
+meta_analysis:
+  description: "Analyze quality and completeness of information"
+  template: |
+    Context:
+    {{context}}
+    
+    Question:
+    {{question}}
+    
+    Before answering, assess:
+    - Is there enough information in the context?
+    - Are there gaps or ambiguities?
+    - What level of confidence is appropriate?
+    
+    Then provide your answer with appropriate caveats.

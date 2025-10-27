@@ -1,0 +1,158 @@
+DATA ENGINEERING DESIGN PATTERNS
+by Konieczny (Technical Reference)
+
+=== INTRODUCTION ===
+Modern data engineering requires systematic approaches to building scalable, maintainable data systems. Design patterns provide proven solutions to recurring problems in data pipeline development, storage optimization, and data transformation workflows.
+
+=== CORE PATTERNS ===
+
+1. LAMBDA ARCHITECTURE
+The Lambda architecture addresses the challenge of processing both real-time and historical data. It consists of three layers:
+- Batch Layer: Processes complete datasets to produce batch views
+- Speed Layer: Handles real-time data with lower latency
+- Serving Layer: Merges results from both layers for queries
+
+Key Benefits:
+- Fault tolerance through immutable data storage
+- Scalability for both batch and streaming
+- Human fault tolerance with recomputation capabilities
+
+Challenges:
+- Complexity of maintaining two separate code paths
+- Resource overhead from dual processing
+- Eventual consistency between layers
+
+2. KAPPA ARCHITECTURE
+A simplified alternative to Lambda, Kappa processes all data as streams:
+- Single processing engine for all data
+- Events stored in distributed log (e.g., Kafka)
+- Reprocessing through log replay
+
+Advantages:
+- Reduced operational complexity
+- Single codebase for all processing
+- Simplified debugging and testing
+
+3. MEDALLION ARCHITECTURE (Bronze/Silver/Gold)
+A data lakehouse pattern organizing data by quality level:
+- Bronze: Raw ingested data, minimal transformation
+- Silver: Cleaned, validated, deduplicated data
+- Gold: Business-level aggregates and features
+
+This pattern enables:
+- Incremental quality improvement
+- Audit trails through preservation of raw data
+- Role-based access at different quality levels
+
+4. SLOWLY CHANGING DIMENSIONS (SCD)
+Patterns for tracking historical changes in dimensional data:
+
+Type 1 (Overwrite): Replace old values with new
+Type 2 (Versioning): Add new rows with version/timestamp
+Type 3 (Previous Value): Keep limited history in additional columns
+
+Type 2 is most common in modern data warehouses, enabling:
+- Complete historical analysis
+- Point-in-time queries
+- Regulatory compliance
+
+5. CHANGE DATA CAPTURE (CDC)
+Capturing incremental changes from source systems:
+- Log-based CDC: Read database transaction logs
+- Trigger-based: Database triggers capture changes
+- Query-based: Timestamp/version column queries
+
+Benefits:
+- Reduced load on source systems
+- Near real-time data availability
+- Lower bandwidth and storage costs
+
+6. EVENT SOURCING
+Store all changes as immutable event sequences:
+- Events are append-only
+- Current state derived from event replay
+- Complete audit trail maintained
+
+Applications:
+- Financial transaction systems
+- User activity tracking
+- System state reconstruction
+
+7. IDEMPOTENT PIPELINES
+Design pipelines to produce same results regardless of execution count:
+- Use deterministic transformations
+- Implement upsert patterns instead of inserts
+- Add execution timestamps and run IDs
+
+Critical for:
+- Pipeline reliability
+- Failure recovery
+- Scheduled reprocessing
+
+8. DATA PARTITIONING STRATEGIES
+Optimize storage and query performance:
+- Time-based: Partition by date/hour for time-series data
+- Hash-based: Distribute data evenly across partitions
+- Range-based: Group by value ranges
+- List-based: Explicit partition assignments
+
+Considerations:
+- Query patterns and access frequency
+- Data distribution and skew
+- Maintenance overhead
+
+9. SCHEMA EVOLUTION PATTERNS
+Handle schema changes without breaking pipelines:
+- Schema Registry: Central schema versioning
+- Forward/Backward Compatibility: Add/remove fields safely
+- Schema-on-Read: Defer schema enforcement to read time
+
+Strategies:
+- Use nullable fields for new columns
+- Maintain schema version metadata
+- Implement graceful degradation
+
+10. DATA QUALITY GATES
+Implement validation checkpoints in pipelines:
+- Schema validation
+- Completeness checks (null rates, missing records)
+- Freshness verification
+- Statistical anomaly detection
+- Business rule validation
+
+Pattern implementation:
+- Fail fast on critical violations
+- Log warnings for minor issues
+- Generate data quality metrics
+- Alert on threshold breaches
+
+=== ANTI-PATTERNS TO AVOID ===
+
+1. The God Pipeline: Single monolithic pipeline doing everything
+   Solution: Decompose into focused, composable pipelines
+
+2. Hard-coded Configurations: Embedded credentials and parameters
+   Solution: Externalize configuration, use secret management
+
+3. Tight Coupling: Direct dependencies between pipeline stages
+   Solution: Use message queues and event-driven architecture
+
+4. No Monitoring: Running blind without observability
+   Solution: Implement comprehensive logging and metrics
+
+5. Data Duplication: Multiple copies without clear purpose
+   Solution: Single source of truth with derived views
+
+=== BEST PRACTICES ===
+
+- Design for failure: Assume components will fail
+- Make pipelines idempotent and replayable
+- Version all code, configuration, and schemas
+- Implement comprehensive testing (unit, integration, end-to-end)
+- Document data lineage and dependencies
+- Use declarative over imperative approaches when possible
+- Optimize for debuggability and observability
+- Plan for data retention and archival from day one
+
+=== CONCLUSION ===
+Data engineering patterns provide reusable solutions to common challenges. Successful implementations require understanding the trade-offs of each pattern and adapting them to specific organizational needs and constraints.

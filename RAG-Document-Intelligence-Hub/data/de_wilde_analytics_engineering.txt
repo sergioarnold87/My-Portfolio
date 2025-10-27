@@ -1,0 +1,644 @@
+ANALYTICS ENGINEERING: THE MODERN DATA PRACTICE
+by De Wilde (Analytics Engineering Reference)
+
+=== INTRODUCTION ===
+Analytics Engineering is a discipline that brings software engineering best practices to data transformation and modeling. It sits between data engineering and analytics, focusing on transforming raw data into analysis-ready datasets using code, version control, testing, and CI/CD.
+
+=== WHAT IS ANALYTICS ENGINEERING? ===
+
+DEFINITION
+Analytics Engineering is the practice of applying software engineering principles to data transformation:
+- Version-controlled transformation logic
+- Modular, reusable data models
+- Automated testing and validation
+- Documentation as code
+- Collaborative development workflows
+
+EVOLUTION
+Traditional approach:
+- Manual SQL in BI tools
+- Copy-paste transformation logic
+- No version control
+- Tribal knowledge
+- Fragile, undocumented pipelines
+
+Modern analytics engineering:
+- Code-first development (dbt, Dataform)
+- Git-based workflows
+- Automated testing
+- Self-service documentation
+- Reliable, maintainable pipelines
+
+=== CORE PRINCIPLES ===
+
+1. TRANSFORMATION IN SQL
+SQL as the transformation language:
+
+Why SQL:
+- Declarative and readable
+- Familiar to analysts
+- Pushdown computation to warehouse
+- Optimized by query engines
+- Easy to test and debug
+
+Modern SQL features:
+- CTEs for readability
+- Window functions for analytics
+- Recursive queries
+- JSON/array handling
+- User-defined functions
+
+2. MODULAR DATA MODELING
+Build reusable components:
+
+Layers:
+- Staging: Raw data cleanup and standardization
+- Intermediate: Business logic and joins
+- Marts: Final models for specific use cases
+
+Benefits:
+- DRY (Don't Repeat Yourself)
+- Easy to maintain
+- Clear dependencies
+- Testable components
+
+3. VERSION CONTROL
+Treat transformations as code:
+
+Git workflow:
+- Feature branches for development
+- Pull requests for review
+- Merge to main for production
+- Tags for releases
+- Rollback capabilities
+
+Benefits:
+- Complete change history
+- Collaboration and review
+- Reproducibility
+- Disaster recovery
+
+4. AUTOMATED TESTING
+Ensure data quality:
+
+Test types:
+- Schema tests (data types, not null)
+- Uniqueness tests (primary keys)
+- Referential integrity (foreign keys)
+- Business logic validation
+- Regression tests
+
+Example tests:
+```yaml
+models:
+  - name: customers
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - unique
+      - name: lifetime_value
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+```
+
+5. DOCUMENTATION
+Self-service knowledge:
+
+Documentation types:
+- Model descriptions
+- Column definitions
+- Business logic explanations
+- Data lineage diagrams
+- Usage examples
+
+Generated documentation:
+- Auto-generated from code
+- Searchable interface
+- Lineage visualization
+- Always up-to-date
+
+=== THE DBT FRAMEWORK ===
+
+DBT (Data Build Tool) is the de facto standard for analytics engineering.
+
+CORE CONCEPTS
+
+1. Models
+SQL files that define transformations:
+
+```sql
+-- models/staging/stg_orders.sql
+with source as (
+    select * from {{ source('raw', 'orders') }}
+),
+
+cleaned as (
+    select
+        order_id,
+        customer_id,
+        order_date,
+        cast(total_amount as decimal(10,2)) as total_amount,
+        status
+    from source
+    where order_date is not null
+)
+
+select * from cleaned
+```
+
+2. Sources
+Declare raw data dependencies:
+
+```yaml
+sources:
+  - name: raw
+    database: raw_db
+    schema: production
+    tables:
+      - name: orders
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+```
+
+3. Refs
+Reference models in SQL:
+
+```sql
+-- models/marts/fct_orders.sql
+select
+    o.order_id,
+    o.order_date,
+    c.customer_name,
+    o.total_amount
+from {{ ref('stg_orders') }} o
+left join {{ ref('stg_customers') }} c
+    on o.customer_id = c.customer_id
+```
+
+Benefits:
+- Automatic dependency resolution
+- Build order determined by dbt
+- Clear lineage tracking
+
+4. Macros
+Reusable SQL snippets:
+
+```sql
+-- macros/cents_to_dollars.sql
+{% macro cents_to_dollars(column_name) %}
+    ({{ column_name }} / 100.0)::decimal(10,2)
+{% endmacro %}
+
+-- Usage in model
+select
+    {{ cents_to_dollars('price_cents') }} as price_dollars
+from {{ ref('stg_products') }}
+```
+
+5. Tests
+Data quality validation:
+
+Built-in tests:
+- unique
+- not_null
+- accepted_values
+- relationships (foreign keys)
+
+Custom tests:
+```sql
+-- tests/order_total_positive.sql
+select *
+from {{ ref('fct_orders') }}
+where total_amount < 0
+```
+
+6. Documentation
+Markdown descriptions:
+
+```yaml
+models:
+  - name: fct_orders
+    description: >
+      Core order facts table containing one row per order.
+      Combines order data with customer and product dimensions.
+    columns:
+      - name: order_id
+        description: Unique identifier for each order
+      - name: total_amount
+        description: Total order value in dollars
+```
+
+=== MODELING PATTERNS ===
+
+1. KIMBALL DIMENSIONAL MODELING
+Star schema for analytics:
+
+Fact tables:
+- Granular events or transactions
+- Foreign keys to dimensions
+- Numeric measures
+
+Dimension tables:
+- Descriptive attributes
+- Slowly changing dimensions
+- Conformed dimensions
+
+Example structure:
+```
+fct_sales (grain: one row per sale line item)
+  - sale_id (PK)
+  - date_id (FK)
+  - customer_id (FK)
+  - product_id (FK)
+  - quantity
+  - revenue
+
+dim_date
+  - date_id (PK)
+  - date
+  - day_of_week
+  - month
+  - quarter
+  - year
+
+dim_customers
+  - customer_id (PK)
+  - customer_name
+  - segment
+  - region
+
+dim_products
+  - product_id (PK)
+  - product_name
+  - category
+  - brand
+```
+
+2. ONE BIG TABLE (OBT)
+Denormalized for BI tools:
+
+Benefits:
+- Simplified queries
+- Better BI tool performance
+- No join complexity
+
+Drawbacks:
+- Data duplication
+- Larger storage footprint
+- Update complexity
+
+When to use:
+- BI tool limitations
+- Specific dashboard needs
+- Performance requirements
+
+3. WIDE TABLES
+Combine related entities:
+
+```sql
+-- models/marts/wide_customers.sql
+select
+    c.customer_id,
+    c.customer_name,
+    c.email,
+    -- Aggregate metrics
+    count(distinct o.order_id) as lifetime_orders,
+    sum(o.total_amount) as lifetime_value,
+    max(o.order_date) as last_order_date,
+    -- Calculated segments
+    case
+        when sum(o.total_amount) > 1000 then 'High Value'
+        when sum(o.total_amount) > 500 then 'Medium Value'
+        else 'Low Value'
+    end as customer_segment
+from {{ ref('stg_customers') }} c
+left join {{ ref('stg_orders') }} o
+    on c.customer_id = o.customer_id
+group by 1, 2, 3
+```
+
+4. INCREMENTAL MODELS
+Process only new/changed data:
+
+```sql
+{{ config(
+    materialized='incremental',
+    unique_key='order_id'
+) }}
+
+select
+    order_id,
+    customer_id,
+    order_date,
+    total_amount
+from {{ source('raw', 'orders') }}
+
+{% if is_incremental() %}
+    -- Only new/updated records
+    where updated_at > (select max(updated_at) from {{ this }})
+{% endif %}
+```
+
+Benefits:
+- Faster build times
+- Lower compute costs
+- Scalable for large datasets
+
+5. SNAPSHOT MODELS
+Track historical changes:
+
+```sql
+{% snapshot orders_snapshot %}
+
+{{
+    config(
+      target_schema='snapshots',
+      unique_key='order_id',
+      strategy='timestamp',
+      updated_at='updated_at'
+    )
+}}
+
+select * from {{ source('raw', 'orders') }}
+
+{% endsnapshot %}
+```
+
+Result: Type 2 SCD with dbt_valid_from, dbt_valid_to columns
+
+=== DEVELOPMENT WORKFLOW ===
+
+1. LOCAL DEVELOPMENT
+Individual developer workflow:
+
+```bash
+# Create feature branch
+git checkout -b feature/customer-segmentation
+
+# Develop model
+# Edit SQL files, add tests, documentation
+
+# Run models locally
+dbt run --models +customer_segmentation
+
+# Test changes
+dbt test --models +customer_segmentation
+
+# Generate documentation
+dbt docs generate
+dbt docs serve
+
+# Commit changes
+git add .
+git commit -m "Add customer segmentation model"
+git push origin feature/customer-segmentation
+```
+
+2. CODE REVIEW
+Pull request process:
+
+Review checklist:
+☐ Clear model naming and organization
+☐ Comprehensive documentation
+☐ Appropriate tests added
+☐ Efficient SQL (no unnecessary complexity)
+☐ Follows team conventions
+☐ Lineage makes sense
+☐ Performance considerations addressed
+
+3. CI/CD PIPELINE
+Automated validation:
+
+```yaml
+# .github/workflows/dbt.yml
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dbt
+        run: pip install dbt-snowflake
+      - name: Run models
+        run: dbt run --select state:modified+
+      - name: Test models
+        run: dbt test --select state:modified+
+      - name: Check SQL formatting
+        run: sqlfluff lint models/
+```
+
+4. DEPLOYMENT
+Production release:
+
+```bash
+# Merge to main triggers production deployment
+git checkout main
+git merge feature/customer-segmentation
+
+# CI/CD runs full test suite
+# Deploys to production on success
+
+# Tag release
+git tag v1.5.0
+git push origin v1.5.0
+```
+
+=== BEST PRACTICES ===
+
+1. NAMING CONVENTIONS
+Consistent naming improves readability:
+
+Prefixes:
+- `stg_`: Staging models (raw data cleanup)
+- `int_`: Intermediate models (business logic)
+- `fct_`: Fact tables (events, transactions)
+- `dim_`: Dimension tables (attributes)
+
+Example:
+```
+models/
+  staging/
+    stg_orders.sql
+    stg_customers.sql
+  intermediate/
+    int_customer_orders.sql
+  marts/
+    fct_sales.sql
+    dim_customers.sql
+```
+
+2. LAYERED ARCHITECTURE
+Organize by transformation stage:
+
+```
+staging/           # 1-to-1 with source tables
+  stg_orders.sql
+  stg_customers.sql
+
+intermediate/      # Business logic, joins
+  int_customer_lifetime_value.sql
+  int_product_metrics.sql
+
+marts/            # Final models for consumption
+  finance/
+    fct_revenue.sql
+  marketing/
+    dim_customer_segments.sql
+```
+
+3. DRY PRINCIPLE
+Avoid duplication:
+
+Bad:
+```sql
+-- Repeated logic in multiple models
+case
+    when total_amount > 1000 then 'High'
+    when total_amount > 500 then 'Medium'
+    else 'Low'
+end as value_segment
+```
+
+Good:
+```sql
+-- Macro for reusable logic
+{% macro customer_segment(amount_column) %}
+    case
+        when {{ amount_column }} > 1000 then 'High'
+        when {{ amount_column }} > 500 then 'Medium'
+        else 'Low'
+    end
+{% endmacro %}
+
+-- Usage
+{{ customer_segment('total_amount') }} as value_segment
+```
+
+4. PERFORMANCE OPTIMIZATION
+Build efficient models:
+
+Strategies:
+- Use incremental models for large datasets
+- Partition tables by date
+- Cluster by frequently filtered columns
+- Materialize as views when data is small
+- Materialize as tables for complex logic
+- Use ephemeral models to reduce warehouse clutter
+
+5. COMPREHENSIVE TESTING
+Build confidence:
+
+Test pyramid:
+- Many schema tests (cheap, fast)
+- Some data quality tests (anomalies, ranges)
+- Few complex business logic tests (expensive)
+
+Example test coverage:
+```yaml
+models:
+  - name: fct_sales
+    columns:
+      - name: sale_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: revenue
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+```
+
+6. RICH DOCUMENTATION
+Enable self-service:
+
+Document:
+- Model purpose and grain
+- Column definitions and business meaning
+- Assumptions and limitations
+- Update frequency
+- Data quality expectations
+- Example queries
+
+=== METRICS AND KPIS ===
+
+Analytics Engineering metrics:
+
+1. BUILD PERFORMANCE
+- Model build time (P50, P95)
+- Full refresh duration
+- Incremental build efficiency
+- Test execution time
+
+2. DATA QUALITY
+- Test pass rate (target: >99%)
+- Model freshness SLA compliance
+- Data quality incident count
+- Time to resolution
+
+3. DEVELOPER PRODUCTIVITY
+- Time to implement new model
+- PR review cycle time
+- Documentation coverage
+- Code reuse rate
+
+4. BUSINESS VALUE
+- Models in production
+- Dashboard/report usage
+- User satisfaction scores
+- Time to insights
+
+=== TOOLS ECOSYSTEM ===
+
+Core platforms:
+- dbt Core: Open-source transformation
+- dbt Cloud: Managed dbt service
+- Dataform: Google's alternative
+- SQLMesh: Newer entrant
+
+Data warehouses:
+- Snowflake: Cloud data warehouse
+- BigQuery: Google's warehouse
+- Redshift: AWS data warehouse
+- Databricks: Lakehouse platform
+
+Supporting tools:
+- Elementary: dbt observability
+- Re_data: Data quality monitoring
+- dbt-expectations: Advanced testing
+- dbt-utils: Utility macros
+
+=== CONCLUSION ===
+Analytics Engineering professionalizes data transformation through software engineering best practices. Organizations adopting these practices achieve:
+
+- 10x faster development cycles
+- 99%+ reliable data pipelines
+- Self-service analytics capabilities
+- Reduced technical debt
+- Scalable data practices
+
+Key success factors:
+- Start with dbt and modern warehouse
+- Establish team conventions early
+- Invest in testing and documentation
+- Build incrementally, prove value
+- Foster collaboration between roles
+
+Remember: Analytics Engineering is as much about culture and process as it is about tools. Focus on building reliable, maintainable, and well-documented data transformations that empower the entire organization.

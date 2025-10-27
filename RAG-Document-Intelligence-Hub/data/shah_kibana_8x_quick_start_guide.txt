@@ -1,0 +1,839 @@
+KIBANA 8.X QUICK START GUIDE
+by Shah
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: INTRODUCTION TO KIBANA
+
+What is Kibana?
+
+Kibana is the visualization and exploration tool for the Elastic Stack (Elasticsearch, Logstash, Beats, and Kibana - often called the ELK Stack). It provides a browser-based interface for searching, viewing, and interacting with data stored in Elasticsearch indices.
+
+Key Capabilities:
+
+1. Data Visualization
+   - Interactive dashboards
+   - Charts, graphs, maps
+   - Time-series analysis
+   - Custom visualizations
+
+2. Data Exploration
+   - Discover interface
+   - Full-text search
+   - Filtering and aggregations
+   - Data drilling
+
+3. Analytics
+   - Machine learning
+   - Anomaly detection
+   - Forecasting
+   - Root cause analysis
+
+4. Observability
+   - Logs monitoring
+   - Metrics tracking
+   - APM (Application Performance Monitoring)
+   - Uptime monitoring
+
+5. Security
+   - SIEM (Security Information and Event Management)
+   - Threat detection
+   - Security analytics
+   - Incident response
+
+Elastic Stack Architecture:
+
+```
+Data Sources → Beats/Logstash → Elasticsearch ← Kibana
+                                      ↓
+                                  Indices
+```
+
+Beats: Lightweight data shippers
+- Filebeat: Log files
+- Metricbeat: System metrics
+- Packetbeat: Network data
+- Heartbeat: Uptime monitoring
+
+Logstash: Data processing pipeline
+- Parse and transform
+- Enrich data
+- Filter and route
+- Output to Elasticsearch
+
+Elasticsearch: Search and analytics engine
+- Distributed storage
+- Full-text search
+- Real-time indexing
+- RESTful API
+
+Kibana: Visualization and management
+- Web interface
+- Dashboards
+- Data exploration
+- Stack management
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: GETTING STARTED
+
+Installation and Setup
+
+Docker Compose Setup:
+
+```yaml
+version: '3.8'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+volumes:
+  es_data:
+```
+
+Start services:
+```bash
+docker-compose up -d
+```
+
+Access Kibana: http://localhost:5601
+
+Initial Configuration:
+
+1. Sample Data Setup:
+   - Navigate to Home
+   - Click "Try sample data"
+   - Add sample datasets (flights, logs, ecommerce)
+
+2. Index Patterns:
+   - Management → Stack Management
+   - Kibana → Index Patterns
+   - Create index pattern matching your data
+
+3. Time Filter:
+   - Set default time range
+   - Configure refresh interval
+   - Time zone settings
+
+Kibana Interface Overview:
+
+Main Navigation:
+- Analytics: Discover, Dashboard, Canvas, Maps
+- Observability: Logs, Metrics, APM, Uptime
+- Security: SIEM, Detections, Cases
+- Management: Stack Management, Dev Tools
+
+Quick Navigation:
+- Use Cmd/Ctrl + / for command palette
+- Recent items
+- Favorites
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: DISCOVER - DATA EXPLORATION
+
+The Discover Interface
+
+Components:
+1. Search Bar: KQL (Kibana Query Language) queries
+2. Time Picker: Select time range
+3. Field List: Available fields
+4. Document Table: Matching documents
+5. Histogram: Time distribution
+
+Kibana Query Language (KQL):
+
+Basic Search:
+```
+status:200
+user.name:john
+```
+
+Boolean Operators:
+```
+status:200 and method:GET
+status:404 or status:500
+not status:200
+```
+
+Wildcards:
+```
+user.name:jo*
+extension:jp*
+```
+
+Field Exists:
+```
+user.name:*
+```
+
+Ranges:
+```
+bytes > 1000
+bytes >= 1000 and bytes < 5000
+@timestamp >= "2023-01-01" and @timestamp < "2023-02-01"
+```
+
+Nested Fields:
+```
+user.address.city:Paris
+```
+
+Advanced Queries:
+
+Combining Conditions:
+```
+(status:200 or status:201) and method:POST
+```
+
+Phrase Search:
+```
+message:"error connecting to database"
+```
+
+Regular Expressions:
+```
+user.name:/joh?n/
+```
+
+Filters:
+
+Add Filter:
+- Click field name
+- Click + icon to include
+- Click - icon to exclude
+
+Filter Operations:
+- Enable/disable filters
+- Pin filters across apps
+- Invert filter
+- Edit filter
+- Remove filter
+
+Temporary Filters:
+- Don't persist in saved searches
+- Useful for exploration
+
+Field Operations:
+
+Add to Table:
+- Click field name
+- Click "Add" button
+- Rearrange columns by drag-drop
+
+Field Statistics:
+- Click field name to see top values
+- Visualize distribution
+
+Format Fields:
+- Customize field display
+- Date formats
+- Number formats
+- URL templates
+
+Saved Searches:
+
+Save Current Search:
+```
+1. Click "Save" in top menu
+2. Enter name
+3. Optional: Save time filter
+4. Click "Save"
+```
+
+Load Saved Search:
+```
+1. Click "Open" in top menu
+2. Select saved search
+3. Search is loaded with filters
+```
+
+Use in Dashboards:
+- Saved searches can be added to dashboards
+- Embedded table visualization
+
+Document Context:
+
+View Surrounding Documents:
+```
+1. Expand document
+2. Click "View surrounding documents"
+3. See documents before/after in time
+```
+
+Single Document View:
+```
+1. Click document row
+2. Toggle between Table/JSON
+3. View field details
+```
+
+Export Data:
+
+CSV Export:
+```
+1. Run search
+2. Click "Share"
+3. Select "CSV Reports"
+4. Generate report
+```
+
+Saved Objects Export:
+```
+1. Management → Saved Objects
+2. Select objects
+3. Export as NDJSON
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: VISUALIZATIONS
+
+Creating Visualizations
+
+Types of Visualizations:
+
+1. Lens (Drag-and-Drop):
+   - Fastest way to create viz
+   - Automatic suggestions
+   - Smart field handling
+
+2. TSVB (Time Series Visual Builder):
+   - Advanced time series
+   - Multiple data sources
+   - Annotations
+   - Custom calculations
+
+3. Vega/Vega-Lite:
+   - Custom viz with code
+   - Advanced control
+   - External data sources
+
+4. Classic Visualizations:
+   - Area, Line, Bar charts
+   - Pie, Donut charts
+   - Data tables
+   - Metrics
+   - Tag clouds
+   - Heat maps
+
+Building with Lens:
+
+Example: Request Count Over Time
+```
+1. Navigate to Visualize Library
+2. Click "Create visualization"
+3. Select "Lens"
+4. Choose index pattern
+5. Drag @timestamp to horizontal axis
+6. Drag Count to vertical axis
+7. Change chart type if needed
+8. Save visualization
+```
+
+Aggregations:
+
+Metrics:
+- Count
+- Average
+- Sum
+- Min/Max
+- Median
+- Percentiles
+- Unique Count
+- Standard Deviation
+
+Buckets:
+- Date Histogram: Group by time
+- Histogram: Group by numeric ranges
+- Terms: Group by field values
+- Filters: Custom filter buckets
+- Range: Custom numeric ranges
+- Significant Terms: Find unusual values
+
+Example Aggregations:
+
+Average Response Time by Endpoint:
+```
+Metrics: Average of response_time
+Buckets: Terms of endpoint.keyword (Top 10)
+```
+
+Request Count by Hour:
+```
+Metrics: Count
+Buckets: Date Histogram of @timestamp (1 hour)
+```
+
+Status Code Distribution:
+```
+Visualization: Pie Chart
+Metrics: Count
+Buckets: Terms of status (Top 5)
+```
+
+TSVB for Advanced Time Series:
+
+Features:
+- Multiple series
+- Math expressions
+- Annotations
+- Custom index patterns per series
+- Panel filters
+
+Example: Error Rate Calculation
+```
+Series 1: Count where status >= 400
+Series 2: Count (all)
+Series 3: Series 1 / Series 2 * 100 (percentage)
+```
+
+Markdown and Controls:
+
+Markdown Widget:
+```markdown
+# Dashboard Title
+
+Current Status: {{metric}}
+
+[External Link](https://example.com)
+```
+
+Input Controls:
+- Dropdown lists
+- Range sliders
+- Apply filters to dashboard
+- Interactive filtering
+
+Maps:
+
+Choropleth Maps:
+- Regional data visualization
+- Country/state aggregations
+- Color by metric value
+
+Coordinate Maps:
+- Point data
+- Latitude/longitude
+- Heat maps
+- Clustering
+
+Example: Geolocation of Users
+```
+1. Create Maps visualization
+2. Add layer → Documents
+3. Select index with geo_point field
+4. Choose geoip.location field
+5. Style by Count or metric
+6. Add tooltips
+```
+
+Data Tables:
+
+Features:
+- Multiple metrics
+- Split rows/columns
+- Percentage mode
+- Total function
+
+Example: Top Referrers
+```
+Metrics: Count, Unique Count of visitors
+Rows: Terms of referrer (Top 20)
+Sort: By Count descending
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 5: DASHBOARDS
+
+Building Dashboards
+
+Creating a Dashboard:
+
+```
+1. Navigate to Dashboard
+2. Click "Create dashboard"
+3. Click "Add from library" or "Create visualization"
+4. Arrange panels
+5. Resize and position
+6. Save dashboard
+```
+
+Dashboard Components:
+
+Visualizations:
+- Charts and graphs
+- Maps
+- Data tables
+- Metrics
+
+Controls:
+- Time picker
+- Search bar
+- Input controls
+- Filters
+
+Markdown:
+- Text annotations
+- Documentation
+- Links
+
+Best Practices:
+
+1. Layout:
+   - Most important metrics at top
+   - Group related visualizations
+   - Consistent sizing
+   - Logical flow
+
+2. Performance:
+   - Limit number of panels (< 20)
+   - Use date ranges wisely
+   - Optimize queries
+   - Use cached data sources
+
+3. Interactivity:
+   - Add drill-downs
+   - Use filters
+   - Enable cross-filtering
+   - Provide context
+
+Dashboard Filters:
+
+Global Filters:
+- Apply to all panels
+- Persist with dashboard
+- Can be pinned
+
+Panel-Level Filters:
+- Edit panel
+- Add specific filters
+- Override global filters
+
+Time Filters:
+- Dashboard time picker
+- Per-panel time ranges
+- Relative time (last 7 days)
+- Absolute time ranges
+
+Drill-Downs:
+
+Panel Actions:
+- Inspect: View raw data
+- Full screen mode
+- Export CSV
+- Share: Link, embed, PDF
+
+Click Actions:
+- Apply filter
+- Navigate to URL
+- Open fly-out
+
+Dashboard Links:
+- Link to related dashboards
+- Pass filters between dashboards
+- Workflow navigation
+
+Dashboard Management:
+
+Sharing:
+
+Public Link:
+```
+1. Click "Share"
+2. Copy link
+3. Optional: short URL
+```
+
+Embed Code:
+```html
+<iframe src="http://kibana:5601/app/dashboards#/view/dashboard-id"
+        height="600" width="800"></iframe>
+```
+
+PDF Reports:
+```
+1. Click "Share"
+2. Select "PDF Reports"
+3. Generate report
+4. Schedule recurring reports
+```
+
+Spaces:
+
+Organize by Team/Project:
+```
+1. Management → Spaces
+2. Create space
+3. Assign users
+4. Copy dashboards to space
+```
+
+Cloning:
+
+Copy Dashboard:
+```
+1. Open dashboard
+2. Click "..." menu
+3. Select "Clone"
+4. Modify for new use case
+```
+
+Dashboard Variables:
+
+Template Variables:
+- Dynamic queries
+- User inputs
+- Parameterized dashboards
+
+Example Use:
+```
+Filter: environment:{{env}}
+Where {{env}} is set by input control
+```
+
+Real-World Dashboard Examples:
+
+1. Application Monitoring:
+   - Request rate (time series)
+   - Error rate (percentage)
+   - Response time (P50, P95, P99)
+   - Top endpoints (table)
+   - Status code distribution (pie)
+   - Geographic user distribution (map)
+
+2. Infrastructure Monitoring:
+   - CPU usage (time series)
+   - Memory utilization (gauge)
+   - Disk I/O (area chart)
+   - Network traffic (line chart)
+   - Top processes (table)
+   - System health (metric)
+
+3. Business Analytics:
+   - Revenue trend (time series)
+   - Conversion rate (metric)
+   - Top products (bar chart)
+   - Customer segments (pie)
+   - Geographic sales (map)
+   - Sales by category (table)
+
+Performance Optimization:
+
+Query Optimization:
+- Use filters instead of queries when possible
+- Limit date ranges
+- Reduce cardinality
+- Cache frequently accessed data
+
+Index Optimization:
+- Use index patterns wisely
+- Consider rollups for historical data
+- Use index lifecycle management
+- Optimize shard count
+
+Dashboard Optimization:
+- Lazy load panels
+- Reduce refresh frequency
+- Use lighter visualizations
+- Limit concurrent queries
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 6: ADVANCED FEATURES
+
+Machine Learning
+
+Anomaly Detection:
+
+Create ML Job:
+```
+1. Machine Learning → Anomaly Detection
+2. Create job
+3. Select index pattern
+4. Choose detector function (mean, count, sum)
+5. Select field to analyze
+6. Configure bucket span (5m, 15m, 1h)
+7. Run job
+```
+
+Detector Functions:
+- High/Low: Detect unusual values
+- Mean/Min/Max: Statistical analysis
+- Count: Unusual event counts
+- Rare: Infrequent values
+- Freq_rare: Frequency changes
+
+Multi-Metric Jobs:
+- Analyze multiple fields
+- Find correlations
+- Population analysis
+- Split by category
+
+Alerting:
+
+Create Alert:
+```
+1. Management → Stack Management
+2. Alerts and Insights → Rules
+3. Create rule
+4. Select rule type:
+   - Index threshold
+   - Anomaly detection
+   - Custom query
+5. Configure conditions
+6. Set actions (email, Slack, webhook)
+7. Save rule
+```
+
+Rule Types:
+- Elasticsearch query
+- Index threshold
+- Anomaly detection alert
+- Transform health
+- Machine learning
+
+Actions:
+- Email notification
+- Slack message
+- PagerDuty
+- Webhook
+- Index document
+
+Canvas:
+
+Workpad Creation:
+```
+1. Navigate to Canvas
+2. Create workpad
+3. Add elements:
+   - Images
+   - Shapes
+   - Text
+   - Visualizations
+4. Use expressions for data
+5. Style elements
+6. Present or export
+```
+
+Canvas Expressions:
+```
+filters
+| essql query="SELECT COUNT(*) FROM logs WHERE status = 404"
+| metric "404 Errors" metricFormat="0,0"
+```
+
+Use Cases:
+- Infographics
+- Executive reports
+- Presentations
+- Branded dashboards
+
+Watcher (Alerting):
+
+Watch Structure:
+```json
+{
+  "trigger": {
+    "schedule": {"interval": "5m"}
+  },
+  "input": {
+    "search": {
+      "request": {
+        "indices": ["logs-*"],
+        "body": {
+          "query": {
+            "bool": {
+              "must": [
+                {"range": {"@timestamp": {"gte": "now-5m"}}},
+                {"term": {"status": 500}}
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {"ctx.payload.hits.total": {"gt": 10}}
+  },
+  "actions": {
+    "send_email": {
+      "email": {
+        "to": "admin@example.com",
+        "subject": "High error rate detected",
+        "body": "{{ctx.payload.hits.total}} errors in last 5 minutes"
+      }
+    }
+  }
+}
+```
+
+Dev Tools:
+
+Console:
+```
+# Elasticsearch REST API
+GET _cat/indices
+
+POST logs-*/_search
+{
+  "query": {
+    "match": {
+      "message": "error"
+    }
+  }
+}
+
+# Bulk operations
+POST _bulk
+{"index": {"_index": "test"}}
+{"field": "value1"}
+{"index": {"_index": "test"}}
+{"field": "value2"}
+```
+
+Profiler:
+- Analyze query performance
+- Identify slow queries
+- Optimize search requests
+
+Grok Debugger:
+- Test log parsing patterns
+- Debug Logstash configurations
+- Validate extractions
+
+Best Practices:
+
+✓ Use index patterns effectively
+✓ Optimize queries and aggregations
+✓ Set appropriate refresh intervals
+✓ Use caching where possible
+✓ Implement access controls
+✓ Monitor Kibana performance
+✓ Regular backups of saved objects
+✓ Document dashboard purposes
+✓ Train team members
+✓ Stay updated with releases
+
+Conclusion:
+
+Kibana 8.x provides powerful capabilities for data exploration, visualization, and monitoring. Master these features to build effective observability and analytics solutions. Practice with sample data, iterate on dashboards, and continuously refine based on user feedback.

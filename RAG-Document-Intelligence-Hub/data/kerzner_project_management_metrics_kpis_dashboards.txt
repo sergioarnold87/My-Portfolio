@@ -1,0 +1,749 @@
+PROJECT MANAGEMENT METRICS, KPIs, AND DASHBOARDS
+by Harold Kerzner
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: FUNDAMENTALS OF PROJECT METRICS
+
+Introduction to Project Metrics
+
+Project metrics are quantifiable measures used to track and assess project performance, quality, and health. They enable data-driven decision making, early problem detection, and continuous improvement.
+
+Types of Metrics:
+
+Lagging Indicators:
+- Measure past performance
+- Historical data
+- Results-oriented
+- Examples: Cost variance, schedule variance, defect rates
+
+Leading Indicators:
+- Predict future performance
+- Forward-looking
+- Proactive management
+- Examples: Risk score, resource availability, requirements stability
+
+Key Performance Indicators (KPIs):
+- Critical success metrics
+- Aligned with strategy
+- Actionable
+- Regularly monitored
+
+Metric Characteristics (SMART):
+- Specific: Clear definition
+- Measurable: Quantifiable
+- Achievable: Realistic targets
+- Relevant: Aligned with objectives
+- Time-bound: Defined timeframe
+
+Common Pitfalls:
+- Too many metrics
+- Vanity metrics without action
+- Gaming the metrics
+- Ignoring context
+- Data quality issues
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: EARNED VALUE MANAGEMENT (EVM)
+
+Core EVM Metrics:
+
+Planned Value (PV):
+- Budgeted cost of scheduled work
+- Baseline measurement
+- PV = BAC × Planned % Complete
+
+Actual Cost (AC):
+- Actual cost incurred
+- Real expenditure
+- Tracked from accounting
+
+Earned Value (EV):
+- Budgeted cost of completed work
+- Value delivered
+- EV = BAC × Actual % Complete
+
+Budget at Completion (BAC):
+- Total planned budget
+- Baseline reference
+
+Performance Indices:
+
+Schedule Performance Index (SPI):
+```
+SPI = EV / PV
+
+SPI > 1.0: Ahead of schedule
+SPI = 1.0: On schedule
+SPI < 1.0: Behind schedule
+
+Example:
+EV = $450K, PV = $500K
+SPI = $450K / $500K = 0.90 (10% behind)
+```
+
+Cost Performance Index (CPI):
+```
+CPI = EV / AC
+
+CPI > 1.0: Under budget
+CPI = 1.0: On budget
+CPI < 1.0: Over budget
+
+Example:
+EV = $450K, AC = $480K
+CPI = $450K / $480K = 0.94 (6% over budget)
+```
+
+Variance Analysis:
+
+Schedule Variance (SV):
+```
+SV = EV - PV
+
+SV > 0: Ahead of schedule
+SV = 0: On schedule
+SV < 0: Behind schedule
+
+Example:
+SV = $450K - $500K = -$50K (behind)
+```
+
+Cost Variance (CV):
+```
+CV = EV - AC
+
+CV > 0: Under budget
+CV = 0: On budget
+CV < 0: Over budget
+
+Example:
+CV = $450K - $480K = -$30K (over budget)
+```
+
+Variance at Completion (VAC):
+```
+VAC = BAC - EAC
+
+Expected budget surplus/deficit
+```
+
+Forecasting Metrics:
+
+Estimate at Completion (EAC):
+```
+Method 1 (CPI only):
+EAC = BAC / CPI
+
+Method 2 (CPI and SPI):
+EAC = AC + [(BAC - EV) / (CPI × SPI)]
+
+Method 3 (New estimate):
+EAC = AC + Bottom-up ETC
+
+Example:
+BAC = $1M, AC = $480K, EV = $450K
+CPI = 0.94
+EAC = $1M / 0.94 = $1.064M
+Projected $64K over budget
+```
+
+Estimate to Complete (ETC):
+```
+ETC = EAC - AC
+
+Remaining work cost estimate
+
+Example:
+ETC = $1.064M - $480K = $584K
+```
+
+To-Complete Performance Index (TCPI):
+```
+TCPI (BAC) = (BAC - EV) / (BAC - AC)
+TCPI (EAC) = (BAC - EV) / (EAC - AC)
+
+Required CPI for remainder of project
+
+Example:
+TCPI = ($1M - $450K) / ($1M - $480K)
+TCPI = $550K / $520K = 1.06
+Must improve performance to 1.06 CPI
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: TIME AND SCHEDULE METRICS
+
+Schedule Performance:
+
+Schedule Variance % (SV%):
+```
+SV% = (SV / PV) × 100%
+
+% deviation from plan
+```
+
+Schedule Performance Index (SPI):
+```
+SPI = EV / PV
+
+Efficiency of time utilization
+```
+
+Critical Path Metrics:
+
+Total Float (Slack):
+```
+Total Float = LS - ES (or LF - EF)
+
+Available schedule buffer
+Negative float = schedule pressure
+```
+
+Critical Path Duration:
+- Longest path through network
+- Zero total float activities
+- Determines project completion
+
+Critical Path Index (CPI):
+```
+CPI = (Number of Critical Paths) / (Total Paths)
+
+Higher CPI = Higher risk
+```
+
+Milestone Metrics:
+
+Milestone Achievement Rate:
+```
+MAR = (Milestones Completed On-Time) / (Total Due Milestones)
+
+Example:
+8 out of 10 milestones on-time
+MAR = 8/10 = 80%
+```
+
+Milestone Variance:
+- Days early/late per milestone
+- Trend analysis over time
+
+Resource Metrics:
+
+Resource Utilization:
+```
+Utilization % = (Actual Hours) / (Available Hours) × 100%
+
+Target: 70-85% (allows buffer)
+>90%: Risk of burnout
+<60%: Underutilization
+```
+
+Resource Availability:
+```
+Availability = (Planned Resources) / (Required Resources)
+
+<1.0: Resource shortage
+=1.0: Fully allocated
+>1.0: Resource surplus
+```
+
+Velocity (Agile):
+```
+Velocity = Story Points Completed per Sprint
+
+Trend over sprints
+Planning future capacity
+```
+
+Cycle Time:
+```
+Cycle Time = Completion Date - Start Date
+
+Average time to complete work item
+Identifies bottlenecks
+```
+
+Lead Time:
+```
+Lead Time = Completion Date - Request Date
+
+Time from request to delivery
+Customer perspective metric
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: QUALITY AND RISK METRICS
+
+Quality Metrics:
+
+Defect Density:
+```
+Defect Density = Defects / Size (KLOC, Function Points, Story Points)
+
+Example:
+25 defects in 10 KLOC
+Density = 2.5 defects per KLOC
+```
+
+Defect Removal Efficiency (DRE):
+```
+DRE = (Defects Found Pre-Release) / (Total Defects) × 100%
+
+Example:
+90 defects found in testing
+10 defects found post-release
+DRE = 90 / (90 + 10) = 90%
+```
+
+Defect Leakage:
+```
+Leakage = (Defects in Later Stage) / (Total Defects) × 100%
+
+Measure of testing effectiveness
+```
+
+First Pass Yield (FPY):
+```
+FPY = (Units Passed First Time) / (Total Units)
+
+Quality of process
+No rework required
+```
+
+Cost of Quality (COQ):
+```
+COQ = Prevention + Appraisal + Failure Costs
+
+Prevention: Planning, training
+Appraisal: Testing, inspection
+Failure: Rework, warranty
+
+Target: 5-15% of project cost
+```
+
+Test Coverage:
+```
+Code Coverage = (Lines Executed) / (Total Lines) × 100%
+Requirements Coverage = (Requirements Tested) / (Total Requirements)
+
+Target: >80% coverage
+```
+
+Risk Metrics:
+
+Risk Exposure:
+```
+Risk Exposure = Probability × Impact
+
+Example:
+Risk A: 60% probability, $50K impact
+Exposure = 0.60 × $50K = $30K
+```
+
+Risk Severity (P×I Matrix):
+```
+Low: 1-3
+Medium: 4-6
+High: 7-10
+
+Score = Probability (1-5) × Impact (1-5)
+```
+
+Risk Burn Down:
+```
+Track risk exposure over time
+Target: Decreasing trend
+Monitor mitigation effectiveness
+```
+
+Issue Metrics:
+
+Open Issues Count:
+- Number of active issues
+- Age of issues
+- Trend over time
+
+Issue Resolution Time:
+```
+Average Resolution Time = Σ(Close Date - Open Date) / Count
+
+Track by severity level
+```
+
+Issue Recurrence Rate:
+```
+Recurrence = (Reopened Issues) / (Closed Issues) × 100%
+
+Indicator of root cause analysis quality
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 5: DASHBOARD DESIGN
+
+Dashboard Principles:
+
+1. Purpose-Driven:
+   - Know your audience
+   - Executive vs operational
+   - Decision-oriented
+   - Actionable insights
+
+2. Visual Hierarchy:
+   - Most important metrics prominent
+   - Logical grouping
+   - Consistent layout
+   - Progressive disclosure
+
+3. Data Freshness:
+   - Real-time vs batch
+   - Update frequency
+   - Data staleness indicator
+   - Refresh timestamp
+
+4. Context and Benchmarks:
+   - Historical trends
+   - Target vs actual
+   - Peer comparisons
+   - Thresholds and alerts
+
+Dashboard Types:
+
+Strategic Dashboard:
+- High-level KPIs
+- Trend analysis
+- Portfolio view
+- Monthly/quarterly refresh
+
+Operational Dashboard:
+- Detailed metrics
+- Real-time data
+- Task-level detail
+- Daily/hourly refresh
+
+Analytical Dashboard:
+- Deep-dive capability
+- Drill-down features
+- What-if analysis
+- Ad-hoc exploration
+
+Essential Dashboard Components:
+
+1. Status Indicators:
+   - RAG (Red/Amber/Green) status
+   - Health scores
+   - Trend arrows
+   - Alert icons
+
+2. Visualizations:
+   - Time series (line charts)
+   - Comparisons (bar charts)
+   - Composition (pie charts)
+   - Relationships (scatter plots)
+   - Distributions (histograms)
+
+3. KPI Cards:
+   - Current value
+   - Target value
+   - Variance
+   - Trend indicator
+
+4. Filters and Controls:
+   - Date range selector
+   - Project selector
+   - Department filter
+   - Drill-down capability
+
+Sample Dashboard Layouts:
+
+Executive Dashboard:
+```
++------------------------+------------------------+
+|  Portfolio Health      | Budget Status          |
+|  Score: 75/100         | Spent: $2.5M / $3M     |
++------------------------+------------------------+
+|                                                  |
+|  Projects by Status (Pie Chart)                 |
+|  - On Track: 12                                 |
+|  - At Risk: 5                                   |
+|  - Off Track: 2                                 |
++--------------------------------------------------+
+|  Resource Utilization (Bar Chart)               |
++--------------------------------------------------+
+|  Top Risks Across Portfolio                     |
++--------------------------------------------------+
+```
+
+Project Manager Dashboard:
+```
++------------------------+------------------------+
+| Schedule Status        | Cost Status            |
+| SPI: 0.95 (5% behind)  | CPI: 1.02 (2% under)  |
++------------------------+------------------------+
+| EV Trend (Line Chart)                           |
+| - PV, AC, EV lines over time                    |
++--------------------------------------------------+
+| Critical Path Activities                        |
+| - Activity | Owner | Status | Due Date          |
++--------------------------------------------------+
+| Open Issues by Severity                         |
++--------------------------------------------------+
+```
+
+Metrics Dashboard Design in Python:
+
+```python
+import plotly.graph_objects as go
+import plotly.express as px
+
+def create_kpi_card(title, value, target, unit='%'):
+    delta = ((value - target) / target) * 100
+    color = 'green' if delta >= 0 else 'red'
+    
+    fig = go.Figure(go.Indicator(
+        mode = "number+delta",
+        value = value,
+        title = {'text': title},
+        delta = {'reference': target, 'relative': True},
+        domain = {'x': [0, 1], 'y': [0, 1]}
+    ))
+    return fig
+
+def create_ev_chart(dates, pv, ev, ac):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=dates, y=pv, name='PV', line=dict(dash='dash')))
+    fig.add_trace(go.Scatter(x=dates, y=ev, name='EV', line=dict(color='blue')))
+    fig.add_trace(go.Scatter(x=dates, y=ac, name='AC', line=dict(color='red')))
+    fig.update_layout(title='Earned Value Analysis',
+                     xaxis_title='Date',
+                     yaxis_title='Cost ($K)')
+    return fig
+
+def create_status_pie(on_track, at_risk, off_track):
+    labels = ['On Track', 'At Risk', 'Off Track']
+    values = [on_track, at_risk, off_track]
+    colors = ['green', 'yellow', 'red']
+    
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values,
+                                  marker_colors=colors)])
+    fig.update_layout(title='Project Status Distribution')
+    return fig
+
+# Streamlit Dashboard Example
+import streamlit as st
+
+st.title("Project Management Dashboard")
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("SPI", "0.95", "-5%")
+with col2:
+    st.metric("CPI", "1.02", "+2%")
+with col3:
+    st.metric("Budget", "$2.5M", "$3M")
+
+st.plotly_chart(create_ev_chart(dates, pv, ev, ac))
+st.plotly_chart(create_status_pie(12, 5, 2))
+```
+
+Dashboard Best Practices:
+
+✓ Focus on actionable metrics
+✓ Use appropriate visualizations
+✓ Maintain visual consistency
+✓ Provide context (targets, trends)
+✓ Enable drill-down capability
+✓ Update regularly
+✓ Validate data accuracy
+✓ Train users on interpretation
+✓ Iterate based on feedback
+✓ Mobile-friendly design
+
+Common Dashboard Mistakes:
+
+✗ Too many metrics (cognitive overload)
+✗ Misleading visualizations
+✗ No context or targets
+✗ Stale data
+✗ Poor color choices
+✗ No interactivity
+✗ Ignoring user needs
+✗ Cluttered layout
+✗ Missing data quality indicators
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 6: ADVANCED METRICS AND ANALYTICS
+
+Predictive Analytics:
+
+Monte Carlo Simulation:
+```python
+import numpy as np
+
+def monte_carlo_schedule(durations, iterations=10000):
+    results = []
+    for _ in range(iterations):
+        simulated = [np.random.triangular(low, likely, high) 
+                    for low, likely, high in durations]
+        total = sum(simulated)
+        results.append(total)
+    
+    p10 = np.percentile(results, 10)
+    p50 = np.percentile(results, 50)
+    p90 = np.percentile(results, 90)
+    
+    return {'P10': p10, 'P50': p50, 'P90': p90}
+
+# Activity durations (optimistic, likely, pessimistic)
+activities = [(5, 10, 15), (3, 5, 8), (7, 10, 20)]
+forecast = monte_carlo_schedule(activities)
+print(f"90% confidence: {forecast['P10']:.1f} - {forecast['P90']:.1f} days")
+```
+
+Trend Analysis:
+```python
+from scipy import stats
+
+def analyze_trend(data):
+    x = range(len(data))
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, data)
+    
+    if p_value < 0.05:
+        direction = "increasing" if slope > 0 else "decreasing"
+        return f"Significant {direction} trend"
+    else:
+        return "No significant trend"
+```
+
+Portfolio-Level Metrics:
+
+Portfolio Health Score:
+```
+Health Score = Weighted Average of Project Scores
+
+Project Score = w1×Schedule + w2×Cost + w3×Quality + w4×Risk
+
+Typical weights:
+Schedule: 25%
+Cost: 25%
+Quality: 25%
+Risk: 25%
+```
+
+Resource Capacity Planning:
+```
+Capacity = Σ(Available Resources × Utilization Rate)
+Demand = Σ(Project Resource Requirements)
+
+Capacity Ratio = Capacity / Demand
+
+<1.0: Capacity shortage
+1.0-1.2: Optimal
+>1.2: Overcapacity
+```
+
+Return on Investment (ROI):
+```
+ROI = (Benefits - Costs) / Costs × 100%
+
+Payback Period = Initial Investment / Annual Benefits
+```
+
+Productivity Metrics:
+
+Function Points per Person-Month:
+```
+Productivity = Function Points / Effort (person-months)
+
+Benchmark against industry standards
+Track improvement over time
+```
+
+Story Points per Sprint:
+```
+Team Velocity = Story Points Completed / Sprint
+
+Capacity planning metric
+Predictability indicator
+```
+
+Value Delivered:
+```
+Value Delivery Rate = Business Value Points / Time
+
+Focus on outcomes, not outputs
+```
+
+Data Analytics Tools:
+
+Python Stack:
+- pandas: Data manipulation
+- matplotlib/plotly: Visualization
+- scikit-learn: Predictive models
+- statsmodels: Statistical analysis
+
+Dashboard Platforms:
+- Tableau: Enterprise BI
+- Power BI: Microsoft ecosystem
+- Grafana: Real-time metrics
+- Streamlit: Python dashboards
+
+Project Management Tools:
+- Jira: Agile metrics
+- MS Project: Traditional PM
+- Monday.com: Visual workflows
+- Asana: Team collaboration
+
+Integration and Automation:
+
+API Integration:
+```python
+import requests
+
+def fetch_jira_metrics(project_key):
+    url = f"https://api.atlassian.com/ex/jira/{project_key}/metrics"
+    response = requests.get(url, headers={'Authorization': f'Bearer {token}'})
+    return response.json()
+
+def update_dashboard(metrics):
+    # Transform and load to dashboard
+    pass
+
+# Schedule automated refresh
+import schedule
+schedule.every().hour.do(lambda: update_dashboard(fetch_jira_metrics('PROJ')))
+```
+
+Data Pipeline:
+```
+Source Systems → ETL → Data Warehouse → Analytics → Dashboard
+
+Steps:
+1. Extract from project tools
+2. Transform and clean data
+3. Load to centralized database
+4. Calculate metrics
+5. Refresh dashboards
+```
+
+Conclusion:
+
+Effective project management requires:
+- Right metrics for decision-making
+- Timely and accurate data
+- Clear visualization
+- Actionable insights
+- Continuous improvement
+
+Success factors:
+✓ Align metrics with strategy
+✓ Balance leading and lagging indicators
+✓ Maintain data quality
+✓ Foster data-driven culture
+✓ Iterate and improve
+
+Remember: Measure what matters, act on insights, and continuously adapt.

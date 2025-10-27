@@ -1,0 +1,136 @@
+# Summarization Prompts
+# Various summarization strategies
+
+executive_summary:
+  description: "High-level executive summary"
+  template: |
+    Document content:
+    {{text}}
+    
+    Create an executive summary that includes:
+    
+    **Overview:** (2-3 sentences)
+    [High-level overview]
+    
+    **Key Findings:** (3-5 points)
+    - [Finding 1]
+    - [Finding 2]
+    - [Finding 3]
+    
+    **Implications:**
+    [What this means]
+    
+    **Recommendations:** (if applicable)
+    [Action items]
+
+section_summary:
+  description: "Summarize a specific section"
+  template: |
+    Section content:
+    {{text}}
+    
+    Summarize this section in 5 key points:
+    
+    1. [Point 1]
+    2. [Point 2]
+    3. [Point 3]
+    4. [Point 4]
+    5. [Point 5]
+    
+    Each point should be factually accurate and self-contained.
+
+bullet_points:
+  description: "Concise bullet point summary"
+  template: |
+    Content:
+    {{text}}
+    
+    Create a bullet point summary:
+    
+    📌 **Main Idea:**
+    - [Core concept]
+    
+    🔑 **Key Points:**
+    - [Point 1]
+    - [Point 2]
+    - [Point 3]
+    
+    💡 **Insights:**
+    - [Insight 1]
+    - [Insight 2]
+
+progressive_summary:
+  description: "Multi-level summary (brief to detailed)"
+  template: |
+    Content:
+    {{text}}
+    
+    **Level 1 - Tweet (280 chars):**
+    [Ultra-concise summary]
+    
+    **Level 2 - Paragraph:**
+    [Brief paragraph summary]
+    
+    **Level 3 - Detailed:**
+    [Comprehensive summary with key details]
+
+technical_abstract:
+  description: "Technical abstract style"
+  template: |
+    Technical content:
+    {{text}}
+    
+    **Abstract:**
+    
+    **Background:** [Context and motivation]
+    
+    **Methods:** [Approaches or techniques discussed]
+    
+    **Results:** [Key findings or outcomes]
+    
+    **Conclusions:** [Main takeaways]
+    
+    Keywords: [5-7 relevant keywords]
+
+chapter_overview:
+  description: "Chapter or long-form summary"
+  template: |
+    Chapter content:
+    {{text}}
+    
+    **Chapter Summary**
+    
+    **Theme:** [Main theme]
+    
+    **Structure:**
+    - Section 1: [Summary]
+    - Section 2: [Summary]
+    - Section 3: [Summary]
+    
+    **Key Concepts:**
+    - [Concept 1]: [Brief explanation]
+    - [Concept 2]: [Brief explanation]
+    
+    **Practical Applications:**
+    [How to apply this knowledge]
+
+comparative_summary:
+  description: "Summarize multiple documents for comparison"
+  template: |
+    Document A:
+    {{doc_a}}
+    
+    Document B:
+    {{doc_b}}
+    
+    **Comparative Summary**
+    
+    | Aspect | Document A | Document B |
+    |--------|-----------|------------|
+    | Main focus | [Focus A] | [Focus B] |
+    | Key arguments | [Args A] | [Args B] |
+    | Methodology | [Method A] | [Method B] |
+    | Conclusions | [Conclusions A] | [Conclusions B] |
+    
+    **Synthesis:**
+    [How these documents relate]

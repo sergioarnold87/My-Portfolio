@@ -1,0 +1,151 @@
+# Document Comparison Prompts
+# Compare multiple documents or sections
+
+side_by_side:
+  description: "Side-by-side comparison"
+  template: |
+    Document A excerpt:
+    {{doc_a}}
+    
+    Document B excerpt:
+    {{doc_b}}
+    
+    Compare these documents side-by-side:
+    
+    | Dimension | Document A | Document B |
+    |-----------|-----------|-----------|
+    | **Approach** | [Approach A] | [Approach B] |
+    | **Depth** | [Depth A] | [Depth B] |
+    | **Focus** | [Focus A] | [Focus B] |
+    | **Examples** | [Examples A] | [Examples B] |
+    
+    **Overall Assessment:**
+    [Which is more suitable for what use case]
+
+conceptual_comparison:
+  description: "Compare conceptual approaches"
+  template: |
+    Concept A (from {{source_a}}):
+    {{concept_a}}
+    
+    Concept B (from {{source_b}}):
+    {{concept_b}}
+    
+    **Conceptual Comparison**
+    
+    **Similarities:**
+    1. [Similarity 1]
+    2. [Similarity 2]
+    
+    **Differences:**
+    1. [Difference 1]
+    2. [Difference 2]
+    
+    **Strengths & Weaknesses:**
+    - Concept A strengths: [List]
+    - Concept A weaknesses: [List]
+    - Concept B strengths: [List]
+    - Concept B weaknesses: [List]
+    
+    **When to use each:**
+    - Use Concept A when: [Conditions]
+    - Use Concept B when: [Conditions]
+
+evolution_analysis:
+  description: "Analyze how ideas evolve across documents"
+  template: |
+    Earlier document:
+    {{early_doc}}
+    
+    Later document:
+    {{later_doc}}
+    
+    **Evolution Analysis**
+    
+    **Original concept:**
+    [What was originally proposed]
+    
+    **Refinements:**
+    [How it evolved]
+    
+    **New additions:**
+    [What's new in the later version]
+    
+    **Deprecated ideas:**
+    [What was removed or changed]
+    
+    **Direction:**
+    [Overall trajectory of the concept]
+
+methodology_comparison:
+  description: "Compare methodologies or approaches"
+  template: |
+    Methodology 1:
+    {{method_1}}
+    
+    Methodology 2:
+    {{method_2}}
+    
+    Compare methodologies:
+    
+    **Methodology 1:**
+    - Process: [Steps]
+    - Pros: [Advantages]
+    - Cons: [Disadvantages]
+    - Best for: [Use cases]
+    
+    **Methodology 2:**
+    - Process: [Steps]
+    - Pros: [Advantages]
+    - Cons: [Disadvantages]
+    - Best for: [Use cases]
+    
+    **Recommendation:**
+    [Which to choose and why]
+
+gap_analysis:
+  description: "Identify gaps between documents"
+  template: |
+    Document A:
+    {{doc_a}}
+    
+    Document B:
+    {{doc_b}}
+    
+    **Gap Analysis**
+    
+    **Covered in A but not B:**
+    - [Topic 1]
+    - [Topic 2]
+    
+    **Covered in B but not A:**
+    - [Topic 1]
+    - [Topic 2]
+    
+    **Complementary aspects:**
+    [How they complement each other]
+    
+    **Recommendation:**
+    [How to use both documents together]
+
+quality_comparison:
+  description: "Compare document quality and depth"
+  template: |
+    Document A:
+    {{doc_a}}
+    
+    Document B:
+    {{doc_b}}
+    
+    **Quality Comparison**
+    
+    | Criterion | Doc A | Doc B | Winner |
+    |-----------|-------|-------|--------|
+    | Depth | [Score/10] | [Score/10] | [A/B/Tie] |
+    | Clarity | [Score/10] | [Score/10] | [A/B/Tie] |
+    | Examples | [Score/10] | [Score/10] | [A/B/Tie] |
+    | Practicality | [Score/10] | [Score/10] | [A/B/Tie] |
+    | Coverage | [Score/10] | [Score/10] | [A/B/Tie] |
+    
+    **Overall:**
+    [Which document is better for what purpose]

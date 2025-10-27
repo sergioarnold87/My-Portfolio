@@ -1,0 +1,826 @@
+MACHINE LEARNING SYSTEM DESIGN
+by Valerii Babushkin & Arseny Kravchenko
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: FOUNDATIONS OF ML SYSTEMS
+
+Introduction to Production ML
+
+Machine learning systems differ fundamentally from traditional software systems. While traditional software follows deterministic rules, ML systems learn patterns from data and make probabilistic predictions. This introduces unique challenges in design, deployment, and maintenance.
+
+Key Differences:
+
+Traditional Software:
+- Deterministic logic
+- Code-based behavior
+- Unit tests validate functionality
+- Predictable performance
+- Debugging is straightforward
+
+ML Systems:
+- Probabilistic outputs
+- Data-driven behavior
+- Performance depends on data quality
+- Model drift over time
+- Complex debugging (model + data + code)
+
+The ML System Lifecycle:
+
+1. Problem Definition
+   - Business objectives
+   - Success metrics
+   - Feasibility assessment
+   - ROI analysis
+
+2. Data Strategy
+   - Data collection
+   - Labeling strategy
+   - Data versioning
+   - Privacy and compliance
+
+3. Model Development
+   - Feature engineering
+   - Model selection
+   - Hyperparameter tuning
+   - Validation strategy
+
+4. Deployment
+   - Serving infrastructure
+   - A/B testing
+   - Canary deployments
+   - Rollback mechanisms
+
+5. Monitoring & Maintenance
+   - Performance tracking
+   - Model drift detection
+   - Retraining triggers
+   - Continuous improvement
+
+System Components:
+
+An ML system typically consists of:
+
+Data Pipeline:
+- Data ingestion from sources
+- Data validation and cleaning
+- Feature extraction and transformation
+- Feature store for serving
+
+Training Pipeline:
+- Data sampling and splitting
+- Model training orchestration
+- Hyperparameter optimization
+- Model validation
+- Model registry
+
+Serving Infrastructure:
+- Model deployment
+- Prediction API
+- Caching layer
+- Load balancing
+- Auto-scaling
+
+Monitoring System:
+- Data quality monitoring
+- Model performance tracking
+- Feature drift detection
+- Latency and throughput metrics
+- Cost monitoring
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: SYSTEM DESIGN PATTERNS
+
+Batch vs Real-Time Serving
+
+Batch Prediction:
+- Process large volumes of data periodically
+- Lower latency requirements (hours/days)
+- Efficient resource utilization
+- Suitable for recommendation systems, risk scoring
+
+Architecture:
+Data Warehouse → Batch Job (Spark/Airflow) → Store Results → Application
+
+Real-Time Prediction:
+- Low latency requirements (< 100ms)
+- Individual predictions on demand
+- Higher infrastructure costs
+- Suitable for fraud detection, content moderation
+
+Architecture:
+API Request → Feature Store → Model Server → Response
+
+Hybrid Approach:
+- Pre-compute features in batch
+- Real-time prediction with cached features
+- Balance latency and cost
+
+Online vs Offline Learning
+
+Offline Learning (Batch Training):
+- Train on historical data
+- Schedule periodic retraining
+- More stable and predictable
+- Easier to validate
+
+Process:
+1. Collect training data
+2. Train model offline
+3. Validate thoroughly
+4. Deploy new model version
+5. Monitor performance
+
+Online Learning (Streaming):
+- Continuous model updates
+- Adapt to recent patterns
+- Complex infrastructure
+- Risk of model degradation
+
+Process:
+1. Receive new data point
+2. Make prediction
+3. Collect feedback
+4. Update model incrementally
+5. Monitor for drift
+
+Feature Store Architecture
+
+Purpose:
+- Centralized feature management
+- Feature reusability across models
+- Consistency between training and serving
+- Feature versioning and lineage
+
+Components:
+
+Offline Store:
+- Historical features for training
+- Batch computation
+- Data warehouse or data lake
+- Point-in-time correct joins
+
+Online Store:
+- Low-latency feature serving
+- Real-time features
+- Key-value store (Redis, DynamoDB)
+- Millisecond access
+
+Feature Pipeline:
+- Feature computation logic
+- Streaming and batch processing
+- Data validation
+- Monitoring and alerting
+
+Popular Solutions:
+- Feast (open-source)
+- Tecton
+- AWS SageMaker Feature Store
+- Databricks Feature Store
+- Google Vertex AI Feature Store
+
+Model Serving Patterns
+
+1. Model-as-Service
+   - REST API endpoint
+   - Model server (TensorFlow Serving, TorchServe)
+   - Horizontal scaling
+   - Version management
+
+2. Embedded Model
+   - Model bundled with application
+   - No network latency
+   - Limited to lightweight models
+   - Mobile and edge deployments
+
+3. Sidecar Pattern
+   - Model runs in sidecar container
+   - Shares resources with application
+   - Kubernetes-native
+   - Easy updates
+
+4. Stream Processing
+   - Model consumes from message queue
+   - Async prediction
+   - High throughput
+   - Kafka + model consumer
+
+Model Registry
+
+Key Features:
+- Version control for models
+- Metadata storage (metrics, hyperparameters)
+- Model lineage
+- Stage management (development, staging, production)
+- Collaboration and governance
+
+MLflow Model Registry:
+```python
+import mlflow
+
+# Register model
+mlflow.sklearn.log_model(model, "model")
+registered_model = mlflow.register_model(
+    f"runs:/{run.info.run_id}/model",
+    "credit_risk_model"
+)
+
+# Transition to production
+client = mlflow.tracking.MlflowClient()
+client.transition_model_version_stage(
+    name="credit_risk_model",
+    version=3,
+    stage="Production"
+)
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: SCALABILITY AND PERFORMANCE
+
+Scaling ML Systems
+
+Horizontal vs Vertical Scaling:
+
+Vertical Scaling (Scale Up):
+- Add more CPU/RAM to single machine
+- Limited by hardware constraints
+- Simpler architecture
+- Good for model training
+
+Horizontal Scaling (Scale Out):
+- Add more machines
+- Distributed computing
+- Complex orchestration
+- Good for inference serving
+
+Scaling Strategies:
+
+1. Data Parallelism
+   - Split data across workers
+   - Each worker trains on subset
+   - Aggregate gradients
+   - Frameworks: Horovod, PyTorch DDP
+
+2. Model Parallelism
+   - Split model across devices
+   - Necessary for large models
+   - Communication overhead
+   - Frameworks: Megatron, DeepSpeed
+
+3. Pipeline Parallelism
+   - Split model into stages
+   - Process mini-batches in pipeline
+   - Improve GPU utilization
+   - Frameworks: GPipe, PipeDream
+
+Inference Optimization
+
+Model Compression:
+
+1. Quantization
+   - Reduce precision (FP32 → INT8)
+   - 4x smaller models
+   - Faster inference
+   - Minimal accuracy loss
+
+2. Pruning
+   - Remove unimportant weights
+   - Sparse models
+   - Reduce computation
+   - Maintain accuracy
+
+3. Knowledge Distillation
+   - Train smaller "student" model
+   - Learn from larger "teacher" model
+   - Transfer knowledge
+   - Significant speedup
+
+4. Model Compilation
+   - ONNX Runtime
+   - TensorRT
+   - TVM
+   - XLA (Accelerated Linear Algebra)
+
+Batching Strategies:
+
+Static Batching:
+- Fixed batch size
+- Wait for batch to fill
+- Higher throughput
+- Increased latency
+
+Dynamic Batching:
+- Flexible batch size
+- Timeout-based collection
+- Balance latency and throughput
+- Configurable parameters
+
+Caching:
+
+Prediction Caching:
+- Cache frequent predictions
+- Redis or Memcached
+- TTL-based invalidation
+- Reduce model invocations
+
+Feature Caching:
+- Cache computed features
+- Reduce feature computation
+- Consistency across requests
+- Invalidation strategy
+
+Distributed Training
+
+Data Distribution:
+
+1. Parameter Server Architecture
+   - Centralized parameter storage
+   - Workers pull/push updates
+   - Scalable to many workers
+   - Can be bottleneck
+
+2. All-Reduce Architecture
+   - Peer-to-peer communication
+   - Ring-allreduce algorithm
+   - Better bandwidth utilization
+   - Used in Horovod
+
+Frameworks:
+
+TensorFlow Distributed:
+```python
+strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+    model = create_model()
+    model.compile(...)
+    
+model.fit(train_dataset, epochs=10)
+```
+
+PyTorch DDP:
+```python
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel
+
+dist.init_process_group("nccl")
+model = DistributedDataParallel(model)
+```
+
+Ray Train:
+```python
+from ray.train.torch import TorchTrainer
+
+trainer = TorchTrainer(
+    train_loop_per_worker=train_func,
+    scaling_config=ScalingConfig(num_workers=4, use_gpu=True)
+)
+trainer.fit()
+```
+
+Cost Optimization
+
+Compute Optimization:
+- Use spot/preemptible instances for training
+- Auto-scaling for inference
+- Right-size instance types
+- Batch inference during off-peak hours
+
+Storage Optimization:
+- Compress training data
+- Incremental data loading
+- Delete old model artifacts
+- Use cheaper storage tiers
+
+Resource Scheduling:
+- Kubernetes for orchestration
+- Resource quotas and limits
+- Bin packing algorithms
+- Job prioritization
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: MONITORING AND OBSERVABILITY
+
+ML-Specific Monitoring
+
+Model Performance Metrics:
+
+Classification:
+- Accuracy, Precision, Recall, F1
+- AUC-ROC, AUC-PR
+- Confusion matrix
+- Per-class metrics
+
+Regression:
+- MAE, MSE, RMSE
+- R-squared
+- MAPE
+- Quantile errors
+
+Ranking:
+- NDCG, MAP
+- MRR
+- Precision@K
+- Diversity metrics
+
+Monitoring Strategies:
+
+1. Ground Truth Monitoring
+   - Compare predictions to actual outcomes
+   - Delayed feedback (hours to weeks)
+   - Most accurate
+   - Not always available
+
+2. Proxy Metrics
+   - User engagement signals
+   - Click-through rates
+   - Conversion rates
+   - Real-time feedback
+
+3. Model-Based Monitoring
+   - Prediction confidence
+   - Prediction distribution
+   - Feature importance shifts
+   - No ground truth needed
+
+Data Drift Detection
+
+Types of Drift:
+
+1. Covariate Shift (Feature Drift)
+   - Input distribution changes
+   - P(X) changes, P(Y|X) stays same
+   - Example: Demographics shift
+
+2. Prior Probability Shift (Label Drift)
+   - Output distribution changes
+   - P(Y) changes
+   - Example: Fraud rates increase
+
+3. Concept Drift
+   - Relationship between X and Y changes
+   - P(Y|X) changes
+   - Example: User preferences evolve
+
+Detection Methods:
+
+Statistical Tests:
+- Kolmogorov-Smirnov test
+- Chi-square test
+- Population Stability Index (PSI)
+- Jensen-Shannon divergence
+
+Time-Window Comparison:
+- Compare recent vs reference window
+- Sliding window analysis
+- Alert on significant drift
+- Adaptive thresholds
+
+Example PSI Calculation:
+```python
+def calculate_psi(expected, actual, bins=10):
+    expected_percents = np.histogram(expected, bins)[0] / len(expected)
+    actual_percents = np.histogram(actual, bins)[0] / len(actual)
+    
+    psi = np.sum(
+        (actual_percents - expected_percents) * 
+        np.log(actual_percents / expected_percents)
+    )
+    return psi
+
+# PSI < 0.1: No significant change
+# 0.1 < PSI < 0.2: Moderate change
+# PSI > 0.2: Significant change
+```
+
+Model Retraining Triggers
+
+Rule-Based Triggers:
+- Schedule (daily, weekly, monthly)
+- Performance threshold (accuracy < 0.8)
+- Drift magnitude (PSI > 0.2)
+- Data volume (every 1M new samples)
+
+Intelligent Triggers:
+- Cost-benefit analysis
+- Expected performance gain
+- Resource availability
+- Business impact assessment
+
+Retraining Pipeline:
+1. Detect trigger condition
+2. Prepare training data
+3. Train new model
+4. Validate against holdout set
+5. A/B test in production
+6. Gradual rollout
+7. Monitor new model
+
+Explainability and Interpretability
+
+Model Agnostic Methods:
+
+SHAP (SHapley Additive exPlanations):
+- Unified framework
+- Local and global explanations
+- Feature importance
+- Game-theory based
+
+LIME (Local Interpretable Model-agnostic Explanations):
+- Local explanations
+- Perturb inputs
+- Fit linear model
+- Understand individual predictions
+
+Partial Dependence Plots:
+- Show marginal effect of features
+- Visualize relationships
+- Model-agnostic
+- Global understanding
+
+Model-Specific Methods:
+
+Tree Models:
+- Feature importance
+- SHAP Tree Explainer
+- Tree visualization
+- Rule extraction
+
+Neural Networks:
+- Attention weights
+- Gradient-based attribution
+- Layer-wise relevance propagation
+- Integrated gradients
+
+Linear Models:
+- Coefficient interpretation
+- Straightforward explanations
+- Statistical significance
+
+Monitoring Dashboard Components:
+
+1. Model Performance Panel
+   - Accuracy trend over time
+   - Error rate by segment
+   - Latency percentiles
+   - Throughput metrics
+
+2. Data Quality Panel
+   - Missing value rates
+   - Feature distributions
+   - Drift scores
+   - Schema validation
+
+3. Infrastructure Panel
+   - CPU/GPU utilization
+   - Memory usage
+   - Request queue depth
+   - Error rates
+
+4. Business Metrics Panel
+   - Revenue impact
+   - User satisfaction
+   - Conversion rates
+   - Cost per prediction
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 5: MLOPS AND AUTOMATION
+
+CI/CD for ML
+
+Continuous Integration:
+
+Testing Pyramid:
+1. Unit Tests
+   - Test data preprocessing functions
+   - Test feature engineering logic
+   - Test model training steps
+   - Fast execution (< 1 second each)
+
+2. Integration Tests
+   - Test data pipeline end-to-end
+   - Test model training pipeline
+   - Test serving infrastructure
+   - Medium execution (seconds to minutes)
+
+3. Model Tests
+   - Test model performance on benchmark
+   - Test inference latency
+   - Test model fairness
+   - Test robustness to adversarial examples
+   - Slow execution (minutes to hours)
+
+Example Test Structure:
+```python
+def test_data_preprocessing():
+    raw_data = load_test_data()
+    processed = preprocess(raw_data)
+    assert processed.shape[0] == raw_data.shape[0]
+    assert processed.isnull().sum().sum() == 0
+
+def test_model_accuracy():
+    model = load_model("models/latest")
+    X_test, y_test = load_test_set()
+    accuracy = model.score(X_test, y_test)
+    assert accuracy > 0.85  # Minimum threshold
+
+def test_prediction_latency():
+    model = load_model("models/latest")
+    X_sample = generate_sample()
+    
+    start = time.time()
+    prediction = model.predict(X_sample)
+    latency = time.time() - start
+    
+    assert latency < 0.1  # 100ms SLA
+```
+
+Continuous Deployment:
+
+Deployment Strategies:
+
+1. Blue-Green Deployment
+   - Two identical environments
+   - Switch traffic instantly
+   - Easy rollback
+   - Double infrastructure cost
+
+2. Canary Deployment
+   - Gradual traffic shift
+   - Monitor metrics
+   - Automatic rollback on failure
+   - Lower risk
+
+3. Shadow Deployment
+   - New model receives traffic
+   - Predictions not served to users
+   - Compare with production model
+   - Safe experimentation
+
+4. A/B Testing
+   - Split traffic between models
+   - Statistical comparison
+   - Business metric optimization
+   - Data-driven decisions
+
+Experiment Tracking
+
+MLflow Tracking:
+```python
+import mlflow
+
+mlflow.set_experiment("credit_risk")
+
+with mlflow.start_run():
+    # Log parameters
+    mlflow.log_param("learning_rate", 0.01)
+    mlflow.log_param("n_estimators", 100)
+    
+    # Train model
+    model = train_model(params)
+    
+    # Log metrics
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.log_metric("auc", auc)
+    
+    # Log artifacts
+    mlflow.sklearn.log_model(model, "model")
+    mlflow.log_artifact("plots/confusion_matrix.png")
+```
+
+Weights & Biases:
+```python
+import wandb
+
+wandb.init(project="image_classification")
+
+# Log config
+wandb.config.update({
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "architecture": "ResNet50"
+})
+
+# Log metrics during training
+for epoch in range(epochs):
+    train_loss = train_epoch()
+    val_loss = validate()
+    
+    wandb.log({
+        "train_loss": train_loss,
+        "val_loss": val_loss,
+        "epoch": epoch
+    })
+```
+
+Orchestration
+
+Airflow for ML Pipelines:
+```python
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+
+with DAG('ml_training_pipeline', schedule_interval='@daily') as dag:
+    
+    extract_data = PythonOperator(
+        task_id='extract_data',
+        python_callable=extract_from_sources
+    )
+    
+    preprocess = PythonOperator(
+        task_id='preprocess',
+        python_callable=preprocess_data
+    )
+    
+    train_model = PythonOperator(
+        task_id='train_model',
+        python_callable=train_and_evaluate
+    )
+    
+    deploy_model = PythonOperator(
+        task_id='deploy',
+        python_callable=deploy_to_production
+    )
+    
+    extract_data >> preprocess >> train_model >> deploy_model
+```
+
+Kubeflow Pipelines:
+```python
+from kfp import dsl
+
+@dsl.component
+def preprocess_data(input_path: str, output_path: str):
+    # Preprocessing logic
+    pass
+
+@dsl.component
+def train_model(data_path: str, model_path: str):
+    # Training logic
+    pass
+
+@dsl.pipeline(name='ML Training Pipeline')
+def ml_pipeline(input_data: str):
+    preprocess_task = preprocess_data(input_path=input_data)
+    train_task = train_model(data_path=preprocess_task.output)
+```
+
+Infrastructure as Code
+
+Terraform for ML Infrastructure:
+```hcl
+resource "aws_sagemaker_model" "model" {
+  name               = "fraud-detection-model"
+  execution_role_arn = aws_iam_role.sagemaker.arn
+
+  primary_container {
+    image          = "123456.dkr.ecr.us-west-2.amazonaws.com/model:latest"
+    model_data_url = "s3://models/fraud-detection/model.tar.gz"
+  }
+}
+
+resource "aws_sagemaker_endpoint_configuration" "config" {
+  name = "fraud-detection-config"
+
+  production_variants {
+    variant_name           = "AllTraffic"
+    model_name            = aws_sagemaker_model.model.name
+    initial_instance_count = 2
+    instance_type         = "ml.m5.xlarge"
+  }
+}
+
+resource "aws_sagemaker_endpoint" "endpoint" {
+  name                 = "fraud-detection-endpoint"
+  endpoint_config_name = aws_sagemaker_endpoint_configuration.config.name
+}
+```
+
+Best Practices Summary:
+
+✓ Version everything (data, code, models, configs)
+✓ Automate testing at multiple levels
+✓ Implement gradual rollout strategies
+✓ Monitor both model and system metrics
+✓ Track experiments systematically
+✓ Use infrastructure as code
+✓ Build retraining pipelines
+✓ Maintain model registries
+✓ Document decisions and trade-offs
+✓ Establish clear ownership and on-call
+
+Conclusion:
+
+Designing production ML systems requires balancing multiple concerns: performance, scalability, reliability, cost, and maintainability. Success requires:
+
+- Strong software engineering practices
+- Deep understanding of ML fundamentals
+- Experience with distributed systems
+- Focus on monitoring and observability
+- Automation and standardization
+- Cross-functional collaboration
+
+The field is rapidly evolving, but core principles remain constant: build systems that are reproducible, reliable, and maintainable. Start simple, measure everything, and iterate based on real-world feedback.

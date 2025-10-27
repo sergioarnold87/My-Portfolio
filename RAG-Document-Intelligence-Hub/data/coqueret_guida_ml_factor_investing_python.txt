@@ -1,0 +1,193 @@
+MACHINE LEARNING FOR FACTOR INVESTING (PYTHON)
+by Coqueret & Guida
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 1: FACTOR INVESTING FOUNDATIONS
+
+Introduction
+
+Factor investing systematically targets risk premia by exploiting return drivers across asset classes. Machine learning enhances traditional factor models through advanced prediction, non-linear relationships, and adaptive algorithms.
+
+Key Factors:
+- Market: Beta exposure (CAPM)
+- Size (SMB): Small cap premium
+- Value (HML): Book-to-market effect  
+- Momentum (WML): Price continuation
+- Quality: Profitability and stability
+- Low Volatility: Risk anomaly
+
+Python Factor Construction:
+```python
+import pandas as pd
+import numpy as np
+
+def calculate_momentum(prices, lookback=252):
+    return prices.pct_change(lookback)
+
+def calculate_value(book_value, market_cap):
+    return book_value / market_cap
+
+# Factor portfolio: Long top quintile, short bottom
+def factor_portfolio(scores):
+    ranks = scores.rank(pct=True)
+    weights = pd.Series(0, index=scores.index)
+    weights[ranks >= 0.8] = 0.5 / (ranks >= 0.8).sum()
+    weights[ranks <= 0.2] = -0.5 / (ranks <= 0.2).sum()
+    return weights
+```
+
+Factor Evaluation Metrics:
+- Sharpe Ratio: Risk-adjusted return
+- Information Ratio: Excess return vs benchmark
+- Factor Spread: Top minus bottom quantile
+- t-statistic: Statistical significance
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 2: ML FOR FACTOR PREDICTION
+
+Feature Engineering:
+```python
+class FeatureBuilder:
+    def fundamental_features(self, data):
+        return {
+            'pe_ratio': data['price'] / data['eps'],
+            'roe': data['net_income'] / data['equity'],
+            'debt_equity': data['debt'] / data['equity'],
+            'earnings_growth': data['earnings'].pct_change(4)
+        }
+    
+    def technical_features(self, data):
+        return {
+            'mom_12m': data['price'].pct_change(252),
+            'volatility': data['return'].rolling(60).std(),
+            'rsi': self.calculate_rsi(data['price'])
+        }
+```
+
+Random Forest Model:
+```python
+from sklearn.ensemble import RandomForestRegressor
+
+model = RandomForestRegressor(n_estimators=100, max_depth=10)
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+```
+
+XGBoost Model:
+```python
+import xgboost as xgb
+
+model = xgb.XGBRegressor(n_estimators=200, learning_rate=0.05)
+model.fit(X_train, y_train,
+         eval_set=[(X_val, y_val)],
+         early_stopping_rounds=20)
+```
+
+Neural Network:
+```python
+from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Dense(64, activation='relu'),
+    keras.layers.Dropout(0.3),
+    keras.layers.Dense(32, activation='relu'),
+    keras.layers.Dense(1)
+])
+model.compile(optimizer='adam', loss='mse')
+model.fit(X_train, y_train, epochs=100, validation_split=0.2)
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 3: PORTFOLIO CONSTRUCTION
+
+Mean-Variance Optimization:
+```python
+import cvxpy as cp
+
+def optimize_portfolio(expected_returns, cov_matrix):
+    n = len(expected_returns)
+    w = cp.Variable(n)
+    risk = cp.quad_form(w, cov_matrix)
+    objective = cp.Maximize(expected_returns @ w - 0.5 * risk)
+    constraints = [cp.sum(w) == 1, w >= 0]
+    problem = cp.Problem(objective, constraints)
+    problem.solve()
+    return w.value
+```
+
+Long-Short Portfolio:
+```python
+def long_short_portfolio(predictions, top_n=50):
+    ranks = predictions.rank(ascending=False)
+    weights = pd.Series(0, index=predictions.index)
+    weights[ranks <= top_n] = 1/top_n
+    weights[ranks >= len(ranks)-top_n] = -1/top_n
+    return weights
+```
+
+Transaction Costs:
+```python
+def apply_transaction_costs(returns, weights, cost_bps=10):
+    turnover = weights.diff().abs()
+    costs = turnover * (cost_bps / 10000)
+    net_returns = returns - costs
+    return net_returns
+```
+
+═══════════════════════════════════════════════════════════════════
+
+CHAPTER 4: BACKTESTING AND EVALUATION
+
+Backtesting Framework:
+```python
+class Backtest:
+    def __init__(self, strategy, data):
+        self.strategy = strategy
+        self.data = data
+    
+    def run(self):
+        portfolio_returns = []
+        for date in self.data.index:
+            weights = self.strategy.get_weights(date)
+            returns = self.data.loc[date] @ weights
+            portfolio_returns.append(returns)
+        return pd.Series(portfolio_returns)
+    
+    def evaluate(self, returns):
+        sharpe = returns.mean() / returns.std() * np.sqrt(252)
+        max_dd = (returns.cumsum() - returns.cumsum().cummax()).min()
+        return {'Sharpe': sharpe, 'Max Drawdown': max_dd}
+```
+
+Performance Metrics:
+- Cumulative Returns
+- Sharpe Ratio
+- Maximum Drawdown
+- Win Rate
+- Profit Factor
+
+Cross-Validation:
+```python
+from sklearn.model_selection import TimeSeriesSplit
+
+tscv = TimeSeriesSplit(n_splits=5)
+for train_idx, test_idx in tscv.split(X):
+    model.fit(X[train_idx], y[train_idx])
+    predictions = model.predict(X[test_idx])
+```
+
+Best Practices:
+✓ Use walk-forward analysis
+✓ Account for transaction costs
+✓ Test multiple regimes
+✓ Monitor factor crowding
+✓ Regular retraining
+✓ Ensemble methods
+✓ Risk management
+✓ Feature selection
+
+Conclusion:
+ML enhances factor investing through better predictions, non-linear patterns, and adaptive strategies. Combine domain knowledge with ML techniques for robust investment solutions.

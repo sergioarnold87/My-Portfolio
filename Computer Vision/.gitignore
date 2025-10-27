@@ -1,0 +1,28 @@
+# Data
+Images/
+data/
+datasets/
+*.csv
+
+# Models
+*.h5
+*.keras
+*.pb
+checkpoints/
+saved_models/
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

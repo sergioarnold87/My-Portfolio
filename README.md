@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 
 # Sergio Arnold – Data & AI Engineering Portfolio
@@ -73,100 +74,190 @@ AWS (Redshift, Lambda, EC2, S3) • GCP (BigQuery, Dataflow) • Docker • Kube
 LangChain • OpenAI • ChromaDB • Scikit-learn • TensorFlow • PyTorch
 
 ### **Data Visualization**
-PowerBI • Tableau • Streamlit • Plotly • Matplotlib
+# Sergio Arnold – Data & AI Engineering Portfolio
 
-### **Development Tools**
-Git/GitHub • Linux (Mint, Ubuntu) • Jupyter • VS Code • DBeaver
+<div align="center">
 
----
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)](https://www.python.org/) [![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-Orchestration-017CEE?logo=apache-airflow&logoColor=white)](https://airflow.apache.org/) [![AWS](https://img.shields.io/badge/AWS-Cloud-FF9900?logo=amazon-aws&logoColor=white)](https://aws.amazon.com/) [![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 
-## 📚 Education
-
-- 🎓 **Bachelor's in Artificial Intelligence and Robotics** – Universidad Americana, Paraguay (Ongoing)
-- 🚀 **[Data Science Bootcamp](https://certificates.soyhenry.com/cert?id=23a44d01-8b32-4699-9431-8c5fd030c2a2)** – Soy Henry (Completed)
-- 🏆 **[Nanodegree in Predictive Analytics for Business](https://graduation.udacity.com/confirm/AMSGCYCN)** – Udacity (Graduated)
-- 🌐 **[Platzi English Academy](https://platzi.com/p/anol198753/ruta/13-idioma-ingles/diploma/detalle/)** – Advanced English Proficiency (Completed)
+</div>
 
 ---
 
-## 🎯 Core Competencies
+## About this repository
 
-### **Technical Skills**
-- ETL/ELT Pipeline Development
-- Data Warehouse Architecture
-- Big Data Processing (Spark, Hadoop)
-- Real-time Streaming (Kafka)
-- Cloud Data Engineering (AWS, GCP)
-- Machine Learning Operations (MLOps)
-- API Development & Integration
-- Database Design & Optimization
-
-### **Soft Skills**
-- Agile/Scrum Methodologies
-- Cross-functional Team Collaboration
-- Technical Documentation
-- Problem-solving & Critical Thinking
-- Continuous Learning & Adaptability
-- Async Communication (Remote Teams)
-- Project Leadership
+This repository is a personal portfolio containing multiple projects. The top of the repo contains the portfolio landing README (this file). Below we keep project folders and their individual READMEs. Recently we imported an external project "vaca-muerta-observability" into the repository as a new project folder; its README is included below under the "Imported project" section for convenience.
 
 ---
 
-## 🚀 Installation & Usage (Linux Mint)
+## Imported project: Vaca Muerta Data Observability (vaca-muerta-observability)
 
-### Prerequisites
-```bash
-# Python 3.8+ required
-python3 --version
-
-# Install virtualenv if not present
-sudo apt install python3-venv
-```
-
-### Setup Instructions
-
-1. **Clone the repository:**
-```bash
-git clone https://github.com/sergioarnold87/My-Portfolio.git
-cd My-Portfolio
-```
-
-2. **Navigate to desired project:**
-```bash
-cd <project-folder>
-```
-
-3. **Create virtual environment:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-4. **Install dependencies:**
-```bash
-pip install -r requirements.txt
-```
-
-5. **Follow project-specific README for execution instructions**
+Below is the imported project's README. It was merged into this repository as a separate project. Please review the project files (folder `vaca-muerta-observability/`) and the project-specific README before using or modifying the code.
 
 ---
 
-## 📫 Contact & Social
+# 🛢️ Vaca Muerta Data Observability & HF Optimization
 
-- **LinkedIn:** [linkedin.com/in/sergioarnold87](https://www.linkedin.com/in/sergioarnold87/)
-- **Email:** sergioarnold87@gmail.com
-- **GitHub:** [@sergioarnold87](https://github.com/sergioarnold87)
-- **Location:** Neuquén, Argentina 🇦🇷
+![Python](https://img.shields.io/badge/Python-3.11-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-1.28-red) ![Docker](https://img.shields.io/badge/Docker-Ready-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Status](https://img.shields.io/badge/Status-Production-success)
+
+A comprehensive **Data Engineering and Machine Learning platform** for optimizing hydraulic fracturing operations in unconventional oil & gas reservoirs, specifically designed for the **Vaca Muerta** formation in Argentina.
+
+## 🎯 Project Overview
+
+This platform provides end-to-end capabilities for:
+
+- **Synthetic Data Generation**: Create realistic well datasets using SDV (Synthetic Data Vault)
+- **Data Observability**: Monitor data quality, freshness, and schema drift
+- **Feature Engineering**: Build advanced features for production forecasting
+- **Production Forecasting**: ML-powered predictions using CatBoost and XGBoost
+
+---
+
+(Project README continues in the project folder. See `vaca-muerta-observability/README.md` for the full file.)
+
+## 🧪 Example Usage
+
+### Generate Synthetic Data
+
+```python
+from src.generate_data import SyntheticDataGenerator
+
+# Generate 150 synthetic wells
+generator = SyntheticDataGenerator(n_wells=150)
+datasets = generator.generate_all()
+
+# Access datasets
+reservoir_df = datasets['reservoir']
+fracturing_df = datasets['fracturing']
+production_df = datasets['production']
+master_df = datasets['master']
+```
+
+### Run Data Quality Checks
+
+```python
+from src.observability import run_quality_checks
+
+# Load data
+df = pd.read_csv('data/bronze/wells_synth.csv')
+
+# Run checks
+results = run_quality_checks(df, date_column='completion_date')
+
+print(f"Quality Score: {results['quality_score']:.1f}%")
+print(f"Completeness: {results['completeness']['overall_completeness_pct']:.1f}%")
+```
+
+### Train ML Model
+
+```python
+from src.ml_pipeline import ProductionMLPipeline
+
+# Initialize pipeline
+pipeline = ProductionMLPipeline(target_column='cum_oil_180_days_m3')
+
+# Train model
+metrics = pipeline.train_model(df)
+
+print(f"Test R²: {metrics['test_r2']:.3f}")
+print(f"Test RMSE: {metrics['test_rmse']:.1f} m³")
+
+# Get predictions
+predictions = pipeline.predict_cum_oil(df)
+```
+
+---
+
+## 🔬 Scientific Background
+
+This project is based on research from:
+
+1. **Morozov et al. (2020)** - "Data-Driven Model for Hydraulic Fracturing Design Optimization"
+2. **Pinto & El Khammal (2023)** - "Vaca Muerta Shale Play Technical Analysis"
+3. **Petrella (2023)** - "Digital Twin Applications in Unconventional Reservoirs"
+
+### Key Insights
+
+- **Proppant intensity** is the #1 driver of EUR (Estimated Ultimate Recovery)
+- **Reservoir quality** (porosity × net pay) explains 40% of production variance
+- **Completion design** matters more than reservoir properties in ultra-tight formations
+
+---
+
+## 🚢 Deployment
+
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t vaca-muerta-observability .
+
+# Run container
+docker run -p 8501:8501 vaca-muerta-observability
+```
+
+### Streamlit Cloud
+
+1. Push repository to GitHub
+2. Connect to [Streamlit Cloud](https://streamlit.io/cloud)
+3. Deploy automatically (detects `app.py`)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+>>>>>>> import/vmo-observability
 
 ---
 
 ## 📄 License
 
+<<<<<<< HEAD
 This portfolio is licensed under the [GNU General Public License v3.0](./LICENSE).
+=======
+This project is licensed under the **MIT License** - see the LICENSE file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Sergio Arnold**  
+Data & AI Engineer | Oil & Gas Analytics Specialist
+
+- 📧 Email: your.email@example.com
+- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
+- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
+
+---
+
+## 🙏 Acknowledgments
+
+- **Vaca Muerta** operators for inspiring real-world use cases
+- **Streamlit** team for the amazing framework
+- **CatBoost** developers for the powerful ML library
+- **SDV** team for synthetic data capabilities
+
+---
+
+## 📚 References
+
+1. Morozov, A., et al. (2020). *Optimization of Hydraulic Fracturing Design Parameters*
+2. Pinto, H., & El Khammal, S. (2023). *Vaca Muerta Technical Review*
+3. Petrella, R. (2023). *Digital Twins in Petroleum Engineering*
+4. Arps, J.J. (1945). *Analysis of Decline Curves*
+>>>>>>> import/vmo-observability
 
 ---
 
 <div align="center">
+<<<<<<< HEAD
 
 **⭐ If you find these projects valuable, please consider starring this repository! ⭐**
 
@@ -174,3 +265,11 @@ This portfolio is licensed under the [GNU General Public License v3.0](./LICENSE
 
 </div>
 
+=======
+  
+**⭐ Star this repo if you find it useful!**
+
+Built with ❤️ for the Data Engineering & Petroleum Industry
+
+</div>
+>>>>>>> import/vmo-observability
